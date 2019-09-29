@@ -2,18 +2,8 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <sitemap>
-        <loc>http://www.huweihuang.com/post-sitemap.xml</loc>
-        <lastmod>2019-09-29T11:00:17.598Z</lastmod>
-    </sitemap>
-
-    <sitemap>
         <loc>http://www.huweihuang.com/page-sitemap.xml</loc>
         <lastmod>2019-09-29T11:00:17.777Z</lastmod>
-    </sitemap>
-
-    <sitemap>
-        <loc>http://www.huweihuang.com/tag-sitemap.xml</loc>
-        <lastmod>2019-09-29T11:00:17.598Z</lastmod>
     </sitemap>
 
 </sitemapindex>
