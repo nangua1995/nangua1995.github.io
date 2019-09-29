@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://www.huweihuang.com/article/Hello-EveryOne/</loc>
+        <lastmod>2019-09-29T14:53:16.439Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://www.huweihuang.com/article/hexo-theme-huweihuang/</loc>
         <lastmod>2019-09-29T11:00:17.598Z</lastmod>
         <changefreq>weekly</changefreq>
