@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://www.huweihuang.com/article/Android-Blog-Summary/</loc>
+        <lastmod>2019-09-30T06:30:26.548Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://www.huweihuang.com/article/hexo-theme-huweihuang/</loc>
         <lastmod>2019-09-29T11:00:17.598Z</lastmod>
         <changefreq>weekly</changefreq>
