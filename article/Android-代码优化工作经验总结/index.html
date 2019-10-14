@@ -338,6 +338,16 @@ ImageView和ImageButton应该提供contentDescription</li>
 ![Lint pic](/img/article/Code review Summary/Lint_pic.png)</p>
 <p>代码分析工具整理：<br>
 ![Lint pic](/img/article/Code review Summary/Analysis_tools_summary.png)</p>
+<h2 id="profile-gpu-rendering-in-setting">Profile GPU Rendering in setting</h2>
+<p>打开手机里面的开发者选项，选择Profile GPU Rendering，选中On screen as bars的选项。<br>
+![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_1.png)</p>
+<p>选择了这样以后，我们可以在手机画面上看到丰富的GPU绘制图形信息，分别关于StatusBar，NavBar，激活的程序Activity区域的GPU Rending信息。</p>
+<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_2.png)</p>
+<p>随着界面的刷新，界面上会滚动显示垂直的柱状图来表示每帧画面所需要渲染的时间，柱状图越高表示花费的渲染时间越长。</p>
+<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_3.png)</p>
+<p>中间有一根绿色的横线，代表16ms，我们需要确保每一帧花费的总时间都低于这条横线，这样才能够避免出现卡顿的问题。</p>
+<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_4.png)</p>
+<p>每一条柱状线都包含三部分，蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染Display List所需要的时间，黄色代表CPU等待GPU处理的时间。</p>
 
                 
 
@@ -403,7 +413,7 @@ ImageView和ImageButton应该提供contentDescription</li>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#code-review-summary"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Code review Summary</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#code-review-summary"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Code review Summary</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#profile-gpu-rendering-in-setting"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Profile GPU Rendering in setting</span></a></li></ol></li></ol>
         
         </div>
       </aside>
