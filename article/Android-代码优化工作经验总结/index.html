@@ -348,6 +348,43 @@ ImageView和ImageButton应该提供contentDescription</li>
 <p>中间有一根绿色的横线，代表16ms，我们需要确保每一帧花费的总时间都低于这条横线，这样才能够避免出现卡顿的问题。</p>
 <p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_4.PNG)</p>
 <p>每一条柱状线都包含三部分，蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染Display List所需要的时间，黄色代表CPU等待GPU处理的时间。</p>
+<p>##Prevent</p>
+<p>Prevent 问题类型:</p>
+<h4 id="性能">性能：</h4>
+<p>内存泄漏<br>
+定制的内存和网络资源泄漏<br>
+数据库连接泄漏</p>
+<h4 id="导致崩溃的缺陷">导致崩溃的缺陷 ：</h4>
+<p>空指针引用<br>
+释放后引用<br>
+多次释放<br>
+不正确的内存分配<br>
+不匹配的数组新建/删除</p>
+<h4 id="不正确的程序行为">不正确的程序行为：</h4>
+<p>逻辑错误导致的死代码<br>
+未初始化变量<br>
+负数的无效引用</p>
+<h4 id="并发">并发：</h4>
+<p>死锁　<br>
+错误使用的阻塞调用</p>
+<h4 id="不正确的apis使用">不正确的APIs使用：</h4>
+<p>STL使用错误<br>
+API错误处理<br>
+安全性问题</p>
+<h4 id="安全编码缺陷">安全编码缺陷 ：</h4>
+<p>缓冲区溢出<br>
+整形溢出 　<br>
+缺失的/ 不充分的恶意数据和字符串输入的验证<br>
+格式化字符串的不安全<br>
+SQL注入攻击<br>
+交叉站点脚本攻击</p>
+<h4 id="隐含的缺陷">隐含的缺陷 ：</h4>
+<p>整个系统折衷<br>
+服务拒绝攻击<br>
+优先权扩张<br>
+保密数据泄漏<br>
+数据丢失<br>
+仲裁代码执行</p>
 
                 
 
@@ -413,7 +450,7 @@ ImageView和ImageButton应该提供contentDescription</li>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#code-review-summary"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Code review Summary</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lint"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Lint</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#profile-gpu-rendering-in-setting"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Profile GPU Rendering in setting</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#code-review-summary"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Code review Summary</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lint"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Lint</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#profile-gpu-rendering-in-setting"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Profile GPU Rendering in setting</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#性能"><span class="toc-nav-number">1.2.0.1.</span> <span class="toc-nav-text">&#x6027;&#x80FD;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#导致崩溃的缺陷"><span class="toc-nav-number">1.2.0.2.</span> <span class="toc-nav-text">&#x5BFC;&#x81F4;&#x5D29;&#x6E83;&#x7684;&#x7F3A;&#x9677; &#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#不正确的程序行为"><span class="toc-nav-number">1.2.0.3.</span> <span class="toc-nav-text">&#x4E0D;&#x6B63;&#x786E;&#x7684;&#x7A0B;&#x5E8F;&#x884C;&#x4E3A;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#并发"><span class="toc-nav-number">1.2.0.4.</span> <span class="toc-nav-text">&#x5E76;&#x53D1;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#不正确的apis使用"><span class="toc-nav-number">1.2.0.5.</span> <span class="toc-nav-text">&#x4E0D;&#x6B63;&#x786E;&#x7684;APIs&#x4F7F;&#x7528;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安全编码缺陷"><span class="toc-nav-number">1.2.0.6.</span> <span class="toc-nav-text">&#x5B89;&#x5168;&#x7F16;&#x7801;&#x7F3A;&#x9677; &#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#隐含的缺陷"><span class="toc-nav-number">1.2.0.7.</span> <span class="toc-nav-text">&#x9690;&#x542B;&#x7684;&#x7F3A;&#x9677; &#xFF1A;</span></a></li></ol></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
