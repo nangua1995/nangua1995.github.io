@@ -212,7 +212,130 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>#Code review Summary</p>
+                <h1 id="code-review-summary">Code review Summary</h1>
+<p>##Lint</p>
+<p>android 官方关于Lint的说明：<a href="https://developer.android.com/studio/write/lint?hl=zh-cn#config" target="_blank" rel="noopener">link</a></p>
+<p>![Lint first look](/img/article/Code review Summary/Lint_firstlook.png)</p>
+<p>Correctness:不够完美的编码，比如硬编码，使用过时的API等<br>
+Performance:对于性能有影响的编码，比如：静态引用，循环引用等<br>
+Internationalization:国际化，直接使用汉字，没有使用资源引用等<br>
+Sercurity:不安全的编码，比如在Webview中允许使用  JavaScriptInterface等<br>
+Usability:可用的，有更好的替换的，比如排版、图标格式建议、png格式等等<br>
+Accessibility:辅助选项，比如ImageView的ContentDescription往往建议在属性中定义等</p>
+<p>常见的检查问题列表：（参考网址：<a href="http://tools.android.com/tips/lint-checks%EF%BC%89" target="_blank" rel="noopener">http://tools.android.com/tips/lint-checks）</a></p>
+<ol>
+<li>Correctness
+<ol>
+<li>DuplicatedIds<br>
+Layout中id应该唯一</li>
+<li>NewApi<br>
+代码中使用的某些API高于Manifest中的Min SDK</li>
+<li>InconsistentArrays<br>
+字符串国际化中，同一名字的的String-Array对应的item值不相同</li>
+<li>Registered<br>
+Activity/Service/ContentProvider没有通过AndroidManifest注册</li>
+<li>Deprecated<br>
+使用已经废弃的API</li>
+<li>PxUsage<br>
+避免使用px，使用dp</li>
+</ol>
+</li>
+<li>Correctness:Messeges
+<ol>
+<li>MissingTranslation 字符串国际化不完全</li>
+<li>ExtraTranslation 国际化的字符串，在默认位置  (defaultlocale)，没有定义</li>
+</ol>
+</li>
+<li>Security
+<ol>
+<li>SetJavaScriptEnabled<br>
+不确定你的程序中确实需要JavaScript就不要执行  SetJavaScriptEnabled。<br>
+2)ExportedContentProvider/ExportedReceiver/ExportedService/ExportedActivity<br>
+ContentProvider/Receiver/Service/Activity的exported为true时，设置一个Permission，让使用者获取了Permission才能使用。</li>
+<li>HardcodedDebugMode<br>
+不要在manifest中设置android:debuggable。<br>
+设置它，编译的任何版本都要采用指定的debug模式。不设置，编译Eng版本采用debug模式；编译User版本采用release模式。</li>
+</ol>
+</li>
+<li>Performance
+<ol>
+<li>DrawAllocation<br>
+避免在绘制或者解析布局(draw/layout)时分配对象。E.g.,Ondraw()中实例化Paint对象。</li>
+<li>ObsoleteLayoutParam<br>
+Layout中无用的参数。</li>
+<li>UseCompoundDrawables<br>
+可优化的布局：如包含一个Imageview和一个TextView的线性布局，可被采用CompoundDrawable的TextView代替。</li>
+<li>UseSparseArrays<br>
+尽量用Android的SparseArray代替Hashmap</li>
+<li>DisableBaselineAlignment<br>
+如果LinearLayout被用于嵌套的layout空间计算，它的android:baselineAligned属性应该设置成false，以加速layout计算。</li>
+<li>FloatMath<br>
+使用FloatMath代替Math。</li>
+<li>NestedWeights<br>
+避免嵌套weight，那将拖累执行效率</li>
+<li>UnusedResources/UnusedIds<br>
+未被使用的资源会是程序变大，并且编译速度降低。</li>
+<li>Overdraw<br>
+如果为RootView指定一个背景Drawable，会先用Theme的背景绘制一遍，然后才用指定的背景，这就是所谓的“Overdraw”。<br>
+可以设置theme的background为null来避免。</li>
+<li>UselessLeaf/UselessParent<br>
+View或view的父亲没有用</li>
+</ol>
+</li>
+<li>Usability:Typography
+<ol>
+<li>TypographyDashes<br>
+特殊字符需用编码代替：“–”需要用“–”；“—”需要用“—”</li>
+<li>TypographyEllipsis<br>
+特殊字符需用编码代替：“…”需要用“…”</li>
+<li>TypographyOther<br>
+问题：“©”需要用“©”</li>
+</ol>
+</li>
+<li>Usability:Icons
+<ol>
+<li>IconNoDpi<br>
+Icon在nodpi和指定dpi的目录下都出现。</li>
+<li>GifUsage<br>
+Image不要用GIF，最好用PNG，可以用JPG。</li>
+</ol>
+</li>
+<li>Usability
+<ol>
+<li>BackButton<br>
+Android中不要设计有Back的按钮，Android中一般有Back的硬按键。</li>
+<li>ButtonCase<br>
+Button的“Ok”/“Cancel”显示大小写一定，不要全大写或全小写。有标准的资源的字符串，不要自己再定义，而要用系统定义的： @android:string/ok和@android:string/cancel</li>
+</ol>
+</li>
+<li>Accessibility
+<ol>
+<li>ContentDescription<br>
+ImageView和ImageButton应该提供contentDescription</li>
+</ol>
+</li>
+<li>Internationalization
+<ol>
+<li>HardcodeText<br>
+硬编码的字符串应该在资源里定义</li>
+<li>EnforceUTF8<br>
+所有XML资源文件都应该以UTF-8编码<br>
+…</li>
+</ol>
+</li>
+</ol>
+<p>Lint可以识别的问题，主要包括：<br>
+1）布局性能（以前是layoutopt工具，可以解决无用布局、嵌套太多、布局太多）<br>
+2）未使用到的资源<br>
+3）不一致的数组大小<br>
+4）国际化问题（硬编码）<br>
+5）图标的问题（重复的图标，错误的大小）<br>
+6）可用性问题（如不指定的文本字段的输入型）<br>
+7）manifest文件的错误</p>
+<p>重点关注以下部分：<br>
+![Lint demo](/img/article/Code review Summary/Lint_demo.png)</p>
+<p>另外一张比较有价值的图:（图片是之前从CSDN上面存储的，就不放水印中的连接了）<br>
+![Lint pic](/img/article/Code review Summary/Lint_pic.png)</p>
 
                 
 
@@ -278,7 +401,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#code-review-summary"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Code review Summary</span></a></li></ol>
         
         </div>
       </aside>
