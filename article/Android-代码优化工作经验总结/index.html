@@ -215,7 +215,7 @@
                 <h1 id="code-review-summary">Code review Summary</h1>
 <h2 id="lint">Lint</h2>
 <p>android 官方关于Lint的说明：<a href="https://developer.android.com/studio/write/lint?hl=zh-cn#config" target="_blank" rel="noopener">link</a></p>
-<p><img src="/img/article/Lint_firstlook.PNG" alt="Lint first look"></p>
+<p><img src="/img/article/Code_review_Summary/Lint_firstlook.PNG" alt="Lint first look"></p>
 <p>Correctness:不够完美的编码，比如硬编码，使用过时的API等<br>
 Performance:对于性能有影响的编码，比如：静态引用，循环引用等<br>
 Internationalization:国际化，直接使用汉字，没有使用资源引用等<br>
@@ -333,20 +333,20 @@ ImageView和ImageButton应该提供contentDescription</li>
 6）可用性问题（如不指定的文本字段的输入型）<br>
 7）manifest文件的错误</p>
 <p>重点关注以下部分：<br>
-![Lint demo](/img/article/Code review Summary/Lint_demo.PNG)</p>
+<img src="/img/article/Code_review_Summary/Lint_demo.PNG" alt="Lint demo"></p>
 <p>另外一张比较有价值的图:（图片是之前从CSDN上面存储的，就不放水印中的连接了）<br>
-![Lint pic](/img/article/Code review Summary/Lint_pic.PNG)</p>
+<img src="/img/article/Code_review_Summary/Lint_pic.PNG" alt="Lint pic"></p>
 <p>代码分析工具整理：<br>
-![Lint pic](/img/article/Code review Summary/Analysis_tools_summary.PNG)</p>
+<img src="/img/article/Code_review_Summary/Analysis_tools_summary.PNG" alt="Lint pic"></p>
 <h2 id="profile-gpu-rendering-in-setting">Profile GPU Rendering in setting</h2>
 <p>打开手机里面的开发者选项，选择Profile GPU Rendering，选中On screen as bars的选项。<br>
-![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_1.PNG)</p>
+<img src="/img/article/Code_review_Summary/GPU_Rendering_1.PNG" alt="GPU Rendering 1"></p>
 <p>选择了这样以后，我们可以在手机画面上看到丰富的GPU绘制图形信息，分别关于StatusBar，NavBar，激活的程序Activity区域的GPU Rending信息。</p>
-<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_2.PNG)</p>
+<p><img src="/img/article/Code_review_Summary/GPU_Rendering_2.PNG" alt="GPU Rendering 1"></p>
 <p>随着界面的刷新，界面上会滚动显示垂直的柱状图来表示每帧画面所需要渲染的时间，柱状图越高表示花费的渲染时间越长。</p>
-<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_3.PNG)</p>
+<p><img src="/img/article/Code_review_Summary/GPU_Rendering_3.PNG" alt="GPU Rendering 1"></p>
 <p>中间有一根绿色的横线，代表16ms，我们需要确保每一帧花费的总时间都低于这条横线，这样才能够避免出现卡顿的问题。</p>
-<p>![GPU Rendering 1](/img/article/Code review Summary/GPU_Rendering_4.PNG)</p>
+<p><img src="/img/article/Code_review_Summary/GPU_Rendering_4.PNG" alt="GPU Rendering 1"></p>
 <p>每一条柱状线都包含三部分，蓝色代表测量绘制Display List的时间，红色代表OpenGL渲染Display List所需要的时间，黄色代表CPU等待GPU处理的时间。</p>
 <h2 id="prevent问题类型">Prevent问题类型</h2>
 <h4 id="性能">性能：</h4>
