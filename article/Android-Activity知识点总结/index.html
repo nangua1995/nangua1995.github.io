@@ -90,6 +90,8 @@
                             
                               <a class="tag" href="/tags/#Android" title="Android">Android</a>
                             
+                              <a class="tag" href="/tags/#Summary" title="Summary">Summary</a>
+                            
                         </div>
                         <h1>Android Activity知识点总结</h1>
                         <h2 class="subheading"></h2>
@@ -228,8 +230,23 @@
 5.onStop()<br>
 6.onDestroy()<br>
 7.onRestart()</p>
-<p>三种生存期：</p>
+<p><strong>三种生存期：</strong></p>
 <p><img src="/img/article/Activity_Summary/Three_LifePeriod.png" alt="Activity LifePeriod"></p>
+<p>生命周期面试题：<br>
+从一个activity启动另外一个activity的时候，说明两个activity各自执行的生命周期</p>
+<p>首先是第一个activity的启动,按照正常一般的生命周期流程经过了onCreate,onStart,onResume:<br>
+<img src="/img/article/Activity_Summary/first_Start.png" alt="Activity test_1"><br>
+然后通过按键点击来启动第二个activity，这里有一个要注意的地方，也就是这个问题的考点：第一个activity先进行了onPause,然后AMS调用第二个activity的onCreate,onStart,onResume,然后第一个activity才继续进行onStop操作。</p>
+<p><img src="/img/article/Activity_Summary/Second_start.png" alt="Activity test_2"><br>
+然后按back键返回第一个activity，同理第二个activity先进行onPause，等到第一个activity进行完onRestart,onStart,onResume的操作后，第二个activity才进行onStop,onDestroy操作。</p>
+<p><img src="/img/article/Activity_Summary/back_to_First.png" alt="Activity test_3"><br>
+最后就是一般操作，退出application，第一个activity进入onPause,onStop,onDestroy.</p>
+<p><img src="/img/article/Activity_Summary/first_destory.png" alt="Activity test_4"></p>
+<p><strong>四种启动模式：</strong><br>
+1.standard<br>
+2.singleTop<br>
+3.singleTask<br>
+4.singleInstance</p>
 
                 
 
@@ -316,6 +333,8 @@
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                          <a class="tag" href="/tags/#Summary" title="Summary">Summary</a>
                         
                     </div>
                 </section>
