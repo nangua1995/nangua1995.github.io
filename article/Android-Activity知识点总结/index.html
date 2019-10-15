@@ -210,7 +210,27 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <h1 id="activity">Activity</h1>
+<p>首先想介绍一下Android Framework概念和我们所学的APP 开发的关系：</p>
+<blockquote>
+<p>做上层APP开发的时候，我们写的app都不是一个完成的程序，我们写的只是一个套件组，就是一堆Activity，Service等等的组件。Framework里面提供的是接口(或者理解为Activity抽象类)，我们重写的Activity就相当于对于接口的实现。Activity的整个生命周期都由Framework框架来掌控，点击桌面图标，由FrameWork框架捕获这个事件，去找这个图标对应的App的Manifest里面找到要启动的第一个Activity，就是那个在Manifest里注明是main和luncher的。然后由Framework框架new出这个myActivity对象。自然也就new出了基类Activity对象，然后Framework框架调用Activity的onCreate（），实际对象是myActivity，执行的也就是myActivity的onCreate（）。这时候App就启动了。</p>
+</blockquote>
+<p>Activity 作为Android四大组件的大哥大，有自己的脾气。开发Activity的时候，就是在实现他的回调函数。</p>
+<h2 id="activity-生命周期">Activity 生命周期</h2>
+<p><img src="/img/article/Activity_Summary/activity_lifecycle.png" alt="Activity LifeCycle"></p>
+<p>Activity 有<strong>四种活动状态</strong>：1.运行状态 2.暂停状态 3.停止状态 4.销毁状态</p>
+<p>暂停状态和停止状态都是活动不处于活动返回栈（Activity的管理栈名称）的栈顶，但是暂停状态是活动依然部分可见，停止状态是完全不可见。</p>
+<p>Activity <strong>生命周期7个回调方法</strong>：<br>
+1.onCreate()<br>
+2.onStart()<br>
+3.onResume()<br>
+4.onPause()<br>
+5.onStop()<br>
+6.onDestroy()<br>
+7.onRestart()</p>
+<p>三种生存期：</p>
+<p><img src="/img/article/Activity_Summary/Three_LifePeriod.png" alt="Activity LifePeriod"></p>
+
                 
 
                 <hr>
@@ -275,7 +295,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#activity"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Activity</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#activity-生命周期"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Activity &#x751F;&#x547D;&#x5468;&#x671F;</span></a></li></ol></li></ol>
         
         </div>
       </aside>
