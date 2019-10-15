@@ -245,8 +245,11 @@
 <p><strong>四种启动模式：</strong><br>
 1.standard<br>
 2.singleTop<br>
+如果启动活动的时候发现返回栈的栈顶已经是要启动的活动，就直接使用它，不另外新建<br>
 3.singleTask<br>
-4.singleInstance</p>
+在整个应用程序的上下文中只有一个活动实例<br>
+4.singleInstance<br>
+指定为singleInstance的活动会启动一个新的返回栈来管理这个活动，与其他活动不共用一个返回栈</p>
 
                 
 
