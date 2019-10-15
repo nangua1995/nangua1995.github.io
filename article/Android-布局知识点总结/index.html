@@ -219,6 +219,206 @@
 android:layout_gravity 用于指定控件在布局中的对齐方式</p>
 <p>layout_weight 是linearlayout布局用于不同机型适配的一个技巧,比如下面这个布局：</p>
 <p><img src="/img/article/Layout_Summary/linearlayout_exp.png" alt="linearlayout exp"></p>
+<?xml version="1.0" encoding="utf-8"?>
+<p><linearlayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#ffffff"></linearlayout></p>
+<pre><code>&lt;LinearLayout
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;0dp&quot;
+    android:orientation=&quot;vertical&quot;
+    android:layout_weight=&quot;1&quot;&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:orientation=&quot;horizontal&quot;
+        android:layout_weight=&quot;1&quot;&gt;
+
+        &lt;LinearLayout
+            android:layout_width=&quot;150dp&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:gravity=&quot;center&quot;&gt;
+
+            &lt;ImageView
+                android:id=&quot;@+id/addMemberDialogPhoto&quot;
+                android:layout_width=&quot;98dp&quot;
+                android:layout_height=&quot;107dp&quot;
+                android:src=&quot;@mipmap/ic_launcher&quot; /&gt;
+        &lt;/LinearLayout&gt;
+
+        &lt;LinearLayout
+            android:layout_weight=&quot;1&quot;
+            android:orientation=&quot;vertical&quot;
+            android:layout_width=&quot;0dp&quot;
+            android:layout_height=&quot;match_parent&quot;&gt;
+        &lt;TextView
+            android:id=&quot;@+id/addMemberDialogName&quot;
+            android:gravity=&quot;bottom&quot;
+            android:text=&quot;姓名：白鹤&quot;
+            android:textSize=&quot;27sp&quot;
+            android:layout_weight=&quot;1&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot; /&gt;
+
+        &lt;TextView
+            android:id=&quot;@+id/addMemberDialogSex&quot;
+            android:gravity=&quot;center_vertical&quot;
+            android:layout_weight=&quot;1&quot;
+            android:textSize=&quot;27sp&quot;
+            android:text=&quot;性别：男&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot; /&gt;
+        &lt;/LinearLayout&gt;
+    &lt;/LinearLayout&gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:orientation=&quot;vertical&quot;
+        android:layout_weight=&quot;1&quot;&gt;
+        &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:orientation=&quot;horizontal&quot;
+            android:layout_weight=&quot;1&quot;&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:id=&quot;@+id/&quot;
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+        &lt;/LinearLayout&gt;
+        &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot;
+            android:orientation=&quot;horizontal&quot;
+            android:layout_weight=&quot;1&quot;&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;match_parent&quot;
+                android:gravity=&quot;center&quot;
+                android:layout_weight=&quot;1&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;100dp&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:background=&quot;@color/colorPrimaryDark&quot;
+                    android:gravity=&quot;center&quot;
+                    android:padding=&quot;5dp&quot;
+                    android:textColor=&quot;#fff&quot;
+                    android:textSize=&quot;17sp&quot;
+                    android:text=&quot;查看&quot;/&gt;
+            &lt;/LinearLayout&gt;
+        &lt;/LinearLayout&gt;
+    &lt;/LinearLayout&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+ <!--d底部   -->
+<pre><code>&lt;LinearLayout
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;50dp&quot;
+    android:orientation=&quot;horizontal&quot;&gt;
+    &lt;TextView
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:background=&quot;#836FFF&quot;
+        android:gravity=&quot;center&quot;
+        android:padding=&quot;5dp&quot;
+        android:textColor=&quot;#fff&quot;
+        android:textSize=&quot;17sp&quot;
+        android:text=&quot;查看&quot;/&gt;
+    &lt;TextView
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:background=&quot;#836FFF&quot;
+        android:padding=&quot;5dp&quot;
+        android:gravity=&quot;center&quot;
+        android:textColor=&quot;#fff&quot;
+        android:textSize=&quot;17sp&quot;
+        android:text=&quot;查看&quot;/&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot;
+        android:layout_weight=&quot;1&quot;
+        android:background=&quot;#836FFF&quot;
+        android:gravity=&quot;center&quot;
+        android:padding=&quot;5dp&quot;
+        android:textColor=&quot;#fff&quot;
+        android:textSize=&quot;17sp&quot;
+        android:text=&quot;删除&quot;/&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+
 <p>2.相对布局<br>
 3.帧布局<br>
 4.百分比布局</p>
