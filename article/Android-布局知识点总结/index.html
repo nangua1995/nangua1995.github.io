@@ -430,9 +430,36 @@ android:layout_gravity 用于指定控件在布局中的对齐方式</p>
 &lt;/LinearLayout&gt;
 </code></pre>
 
-<p>2.相对布局<br>
-3.帧布局<br>
-4.百分比布局</p>
+2.相对布局  
+相对于其他布局，定义当前布局的位置。
+<p>相对于父布局定位主要用到：<br>
+android:layout_alignParentLeft、  android:layout_alignParentTop、android:layout_alignParentRight、android:layout_alignParentButtom、android:layout_centerInParent</p>
+<p>相对于其他控件进行定位主要用到：<br>
+android:layout_above、android:layout_below、android:layout_toLeftOf、android:layout_toRightOf  针对于其他控件(例子：@id/button3)所在的位置</p>
+<p>当前控件和其他控件的边缘对齐(例子：@id/button3)所在的位置<br>
+android:layout_alignLeft、android:layout_alignRight、<br>
+android:layout_alignTop、android:layout_alignBottom.</p>
+<p>3.帧布局<br>
+没有方便的定位方式，所有的控件都会默认摆放在布局的左上角。<br>
+<img src="/img/article/Layout_Summary/FrameLayout_Code.png" alt="FrameLayout Code"></p>
+<p><img src="/img/article/Layout_Summary/FrameLayout_Pic.png" alt="FrameLayout Layout"><br>
+但是可以通过android：layout_gravity 来调整控件的位置。<br>
+<img src="/img/article/Layout_Summary/FrameLayout_gravity.png" alt="FrameLayout Code"></p>
+<p><img src="/img/article/Layout_Summary/FrameLayout_gravity_pic.png" alt="FrameLayout Code"></p>
+<p>layout_gravity 可以用 | 来叠加参数：<br>
+<img src="/img/article/Layout_Summary/FrameLayout_twoProperty.png" alt="FrameLayout Code"></p>
+<p><img src="/img/article/Layout_Summary/FrameLayout_TwoPro_Pic.png" alt="FrameLayout Code"></p>
+<p>帧布局多用于和Fragment配合使用。</p>
+<p>4.百分比布局<br>
+因为FrameLayout和RelativeLayout都不支持使用layout_weight的形式来实现比例划分大小，所以android引入了百分比布局—&gt;PercentFrameLayout和PercentRelativeLayout这两个全新的布局。需要引入support库来使用这个布局。</p>
+<pre><code>compile 'com.android.support:percent:24.2.1'
+</code></pre>
+<p>使用的时候要注意xml文件上方是否定义了app的命名空间。<br>
+xmlns:app=&quot;<a href="http://schemas.android.com/apk/res-auto" target="_blank" rel="noopener">http://schemas.android.com/apk/res-auto</a>&quot;<br>
+然后可以使用app：layout_widthPercent=“50%” 和app:layout_heightPercent=“50%” 来实现按照比例划分。</p>
+<p>tips:<br>
+1.xml文件中的头部，里面有一句<br>
+xmlns:android=“<a href="http://schemas.android.com/apk/res/android" target="_blank" rel="noopener">http://schemas.android.com/apk/res/android</a>” 是用于定义android的命名空间，之所以能使用android的前缀(比如android：layout_wight=1)就是因为这个道理。</p>
 
                 
 
