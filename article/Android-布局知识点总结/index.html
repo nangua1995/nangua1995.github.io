@@ -213,6 +213,13 @@
                 post-container">
 
                 <h1 id="android-布局">Android 布局</h1>
+<p><strong>六大布局</strong>：</p>
+<p>1、线性布局（LinearLayout）：按照垂直或者水平方向布局的组件</p>
+<p>2、帧布局（FrameLayout）：组件从屏幕左上方布局组件</p>
+<p>3、表格布局（TableLayout）：按照行列方式布局组件</p>
+<p>4、绝对布局（AbsoluteLayout）：按照绝对坐标来布局组件</p>
+<p>5、相对布局（RelativeLayout）：相对其它组件的布局方式</p>
+<p>6、约束布局 （ConstraintLayout）：按照约束布局组件</p>
 <h2 id="1线性布局">1.线性布局</h2>
 <p>对于排列比较有规律的布局一般都用线性布局</p>
 <p>android:gravity 用于指定文字在控件中的对齐方式<br>
@@ -465,6 +472,8 @@ xmlns:app=&quot;<a href="http://schemas.android.com/apk/res-auto" target="_blank
 <p>###　２.自定义布局<br>
 使用完整的包名路径和类名来引入自定义的布局</p>
 <p><code>&lt;com.android.xxx.xxx.CustomView ... &gt;&lt;/com.android.xxx.xxx.CustomView&gt;</code></p>
+<h2 id="6表格布局tablelayout">６.表格布局ＴａｂｌｅＬａｙｏｕｔ</h2>
+<h2 id="7绝对布局absoltelayout">７.绝对布局ＡｂｓｏｌｔｅＬａｙｏｕｔ</h2>
 <p>tips:<br>
 1.xml文件中的头部，里面有一句<br>
 xmlns:android=“<a href="http://schemas.android.com/apk/res/android" target="_blank" rel="noopener">http://schemas.android.com/apk/res/android</a>” 是用于定义android的命名空间，之所以能使用android的前缀(比如android：layout_wight=1)就是因为这个道理。</p>
@@ -533,7 +542,7 @@ xmlns:android=“<a href="http://schemas.android.com/apk/res/android" target="_b
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#android-布局"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Android &#x5E03;&#x5C40;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1线性布局"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.&#x7EBF;&#x6027;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3帧布局"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">3.&#x5E27;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4百分比布局"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">4.&#x767E;&#x5206;&#x6BD4;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5布局的复杂用法"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">5.&#x5E03;&#x5C40;&#x7684;&#x590D;&#x6742;&#x7528;&#x6CD5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1include布局"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">1.include&#x5E03;&#x5C40;</span></a></li></ol></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#android-布局"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Android &#x5E03;&#x5C40;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1线性布局"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.&#x7EBF;&#x6027;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3帧布局"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">3.&#x5E27;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4百分比布局"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">4.&#x767E;&#x5206;&#x6BD4;&#x5E03;&#x5C40;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5布局的复杂用法"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">5.&#x5E03;&#x5C40;&#x7684;&#x590D;&#x6742;&#x7528;&#x6CD5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1include布局"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">1.include&#x5E03;&#x5C40;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6表格布局tablelayout"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">&#xFF16;.&#x8868;&#x683C;&#x5E03;&#x5C40;&#xFF34;&#xFF41;&#xFF42;&#xFF4C;&#xFF45;&#xFF2C;&#xFF41;&#xFF59;&#xFF4F;&#xFF55;&#xFF54;</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7绝对布局absoltelayout"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#xFF17;.&#x7EDD;&#x5BF9;&#x5E03;&#x5C40;&#xFF21;&#xFF42;&#xFF53;&#xFF4F;&#xFF4C;&#xFF54;&#xFF45;&#xFF2C;&#xFF41;&#xFF59;&#xFF4F;&#xFF55;&#xFF54;</span></a></li></ol></li></ol>
         
         </div>
       </aside>
