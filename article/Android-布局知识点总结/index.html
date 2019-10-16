@@ -462,7 +462,9 @@ xmlns:app=&quot;<a href="http://schemas.android.com/apk/res-auto" target="_blank
 <p>可以在另外一个ｘｍｌ文件中使用include语句来复用其他布局文件</p>
 <pre><code> &lt;include layout=&quot;@layout/xxx&quot;/&gt;
 </code></pre>
-<p>###</p>
+<p>###　２.自定义布局<br>
+使用完整的包名路径和类名来引入自定义的布局</p>
+<p><code>&lt;com.android.xxx.xxx.CustomView ... &gt;&lt;/com.android.xxx.xxx.CustomView&gt;</code></p>
 <p>tips:<br>
 1.xml文件中的头部，里面有一句<br>
 xmlns:android=“<a href="http://schemas.android.com/apk/res/android" target="_blank" rel="noopener">http://schemas.android.com/apk/res/android</a>” 是用于定义android的命名空间，之所以能使用android的前缀(比如android：layout_wight=1)就是因为这个道理。</p>
