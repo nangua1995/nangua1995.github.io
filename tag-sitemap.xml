@@ -23,13 +23,6 @@
     </url>
 
     <url>
-        <loc>http://www.huweihuang.com/tags/Android/</loc>
-        <lastmod>2019-10-17T11:16:10.180Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.huweihuang.com/tags/Summary/</loc>
         <lastmod>2019-10-17T11:16:10.180Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -46,6 +39,13 @@
     <url>
         <loc>http://www.huweihuang.com/tags/ubuntu-use/</loc>
         <lastmod>2019-10-22T01:49:22.986Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.huweihuang.com/tags/Android/</loc>
+        <lastmod>2019-10-22T07:51:07.654Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
