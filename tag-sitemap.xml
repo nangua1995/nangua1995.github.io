@@ -9,13 +9,6 @@
     </url>
 
     <url>
-        <loc>http://www.huweihuang.com/tags/Finance/</loc>
-        <lastmod>2019-10-14T03:57:07.888Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://www.huweihuang.com/tags/Accumulation/</loc>
         <lastmod>2019-10-14T03:57:07.888Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -39,6 +32,13 @@
     <url>
         <loc>http://www.huweihuang.com/tags/Summary/</loc>
         <lastmod>2019-10-17T11:16:10.180Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.huweihuang.com/tags/Finance/</loc>
+        <lastmod>2019-10-22T01:37:39.884Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
