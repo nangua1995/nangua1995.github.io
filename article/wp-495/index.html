@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Android SystemUI 启动流程 · snowCrane</title>
+<link rel="stylesheet" href="/blog/static/style.css">
+<link rel="stylesheet" href="/wordpress/static/wordpress.css">
+<link rel="stylesheet" href="/css/snowcrane-features.css">
+</head><body>
+<header class="hero"><div class="hero-inner"><a class="brand" href="/">snowCrane</a>
+<nav><a href="/">文章</a><a href="/blog/">双语文章</a>
+<a href="https://zhinengzuocang.cn/cockpit/">招聘雷达</a></nav></div></header>
+<main><article class="wp-article">
+<p class="back"><a href="/">← 返回文章列表</a></p>
+<p class="meta">2024-04-17 · WordPress 归档</p>
+<h1>Android SystemUI 启动流程</h1><p class="summary">SystemServer中启动 SystemServer启动后，会在Main Thread启动Activity […]</p>
+<div class="source-link"><a href="https://zhinengzuocang.cn/2024/04/17/android-systemui-%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b/">查看主站原文 ↗</a></div>
+<div class="wp-content">
+<h3 class="wp-block-heading">SystemServer中启动</h3>
+
+
+
+<p>SystemServer启动后，会在Main Thread启动ActivityManagerService，当ActivityManagerService systemReady后，会去启动SystemUIService。</p>
+
+
+
+<p><em>/frameworks/base/services/java/com/android/server/SystemServer.java</em></p>
+
+
+
+<pre class="wp-block-code"><code>①main
+    /**
+     * The main entry point from zygote.
+     */
+    public static void main(String&#91;] args) {
+        new SystemServer().run();
+    }
+②run
+    private void run() {
+        t.traceBegin("InitBeforeStartServices");
+        ....
+       // Create the system service manager.
+            mSystemServiceManager = new SystemServiceManager(mSystemContext);
+            mSystemServiceManager.setStartInfo(mRuntimeRestart,
+                    mRuntimeStartElapsedTime, mRuntimeStartUptime);
+            LocalServices.addService(SystemServiceManager.class, mSystemServiceManager);
+        ....
+       }
+③mActivityManagerService.systemReady
+mActivityManagerService.systemReady(() -&gt; {
+    //准备好服务
+    Slog.i(TAG, "Making services ready");
+    ....
+            //跟踪开启系统界面
+            t.traceBegin("StartSystemUI");
+            try {
+                //开启系统界面
+                startSystemUi(context, windowManagerF);
+            } catch (Throwable e) {
+                reportWtf("starting System UI", e);
+            }
+            t.traceEnd();
+    ....
+}
+④startSystemUi
+    private static void startSystemUi(Context context, WindowManagerService windowManager) {
+        PackageManagerInternal pm = LocalServices.getService(PackageManagerInternal.class);
+        Intent intent = new Intent();
+        intent.setComponent(pm.getSystemUiServiceComponent());
+        intent.addFlags(Intent.FLAG_DEBUG_TRIAGED_MISSING);
+        //Slog.d(TAG, "Starting service: " + intent);
+        //通过startServiceAsUser，SystemUIService就启动了，即SystemUI进程开机启动
+        context.startServiceAsUser(intent, UserHandle.SYSTEM);
+        windowManager.onSystemUiStarted();
+    }</code></pre>
+
+
+
+<h3 class="wp-block-heading">SystemUIService</h3>
+
+
+
+<p>在SystemUIService的onCreate方法中会调用SystemUIApplication的<strong>startServicesIfNeeded</strong>方法，这个方法会调用&nbsp;<strong>startServicesIfNeeded</strong>(SERVICES)方法启动一系列服务.</p>
+
+
+
+<pre class="wp-block-code"><code>@Override
+    public void onCreate() {
+        super.onCreate();
+        // Start all of SystemUI
+        ((SystemUIApplication) getApplication()).startServicesIfNeeded();
+  }</code></pre>
+
+
+
+<h3 class="wp-block-heading">SystemUIApplication</h3>
+
+
+
+<p><em>/frameworks/base/packages/SystemUI/src/com/android/systemui/SystemUIApplication.java</em></p>
+
+
+
+<pre class="wp-block-code"><code>①startServicesIfNeeded()
+public void startServicesIfNeeded() {
+    //获取所有的服务的路径，所有SERVICES统一继承了SystemUI类：
+    String&#91;] names = SystemUIFactory.getInstance().getSystemUIServiceComponents(getResources());
+    startServicesIfNeeded(/* metricsPrefix= */ "StartServices", names);
+}
+②startServicesIfNeeded(String metricsPrefix, String&#91;] services)
+在重载方法中将每一个名称通过反射来得到实例对象,然后依次调用每一个SystemUI的子类的start方法启动每一个模块。
+
+private void startServicesIfNeeded(String metricsPrefix, String&#91;] services) {
+    if (mServicesStarted) {
+        return;
+    }
+    mServices = new SystemUI&#91;services.length];
+
+    //检查一下，也许在我们开始之前很久它就已经完成了
+    if (!mBootCompleteCache.isBootComplete()) {
+        // check to see if maybe it was already completed long before we began
+        // see ActivityManagerService.finishBooting()
+        if ("1".equals(SystemProperties.get("sys.boot_completed"))) {
+            mBootCompleteCache.setBootComplete();
+            if (DEBUG) {
+                Log.v(TAG, "BOOT_COMPLETED was already sent");
+            }
+        }
+    }
+
+    final DumpManager dumpManager = mRootComponent.createDumpManager();
+
+    Log.v(TAG, "Starting SystemUI services for user " +
+            Process.myUserHandle().getIdentifier() + ".");
+    TimingsTraceLog log = new TimingsTraceLog("SystemUIBootTiming",
+            Trace.TRACE_TAG_APP);
+    //开始追踪
+    log.traceBegin(metricsPrefix);
+    final int N = services.length;
+    //遍历services这个数组
+    for (int i = 0; i &lt; N; i++) {
+        String clsName = services&#91;i];
+        if (DEBUG) Log.d(TAG, "loading: " + clsName);
+        log.traceBegin(metricsPrefix + clsName);
+        long ti = System.currentTimeMillis();
+        try {
+            SystemUI obj = mComponentHelper.resolveSystemUI(clsName);
+            if (obj == null) {
+                Constructor constructor = Class.forName(clsName).getConstructor(Context.class);
+                obj = (SystemUI) constructor.newInstance(this);
+            }
+            mServices&#91;i] = obj;
+        } catch (ClassNotFoundException
+                | NoSuchMethodException
+                | IllegalAccessException
+                | InstantiationException
+                | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        if (DEBUG) Log.d(TAG, "running: " + mServices&#91;i]);
+        //依次调用service的start方法启动服务
+        mServices&#91;i].start();
+        log.traceEnd();
+
+        // Warn if initialization of component takes too long
+        //如果组件初始化时间过长，则发出警告
+        ti = System.currentTimeMillis() - ti;
+        if (ti &gt; 1000) {
+            Log.w(TAG, "Initialization of " + clsName + " took " + ti + " ms");
+        }
+        if (mBootCompleteCache.isBootComplete()) {
+            mServices&#91;i].onBootCompleted();
+        }
+
+        dumpManager.registerDumpable(mServices&#91;i].getClass().getName(), mServices&#91;i]);
+    }
+    mRootComponent.getInitController().executePostInitTasks();
+    //结束追踪
+    log.traceEnd();
+
+    mServicesStarted = true;
+}</code></pre>
+
+
+
+<h2 class="wp-block-heading">状态栏</h2>
+
+
+
+<h3 class="wp-block-heading">StatusBar.start()</h3>
+
+
+
+<pre class="wp-block-code"><code>①createAndAddWindows
+    public void createAndAddWindows(@Nullable RegisterStatusBarResult result) {
+        //创建状态栏
+        makeStatusBarView(result);
+        mNotificationShadeWindowController.attach();
+        //创建状态栏的窗口
+        mStatusBarWindowController.attach();
+    }
+②makeStatusBarView
+protected void makeStatusBarView(@Nullable RegisterStatusBarResult result) {
+    final Context context = mContext;
+    .....
+    FragmentHostManager.get(mPhoneStatusBarWindow)
+            .addTagListener(CollapsedStatusBarFragment.TAG, (tag, fragment) -&gt; {
+                //CollapsedStatusBarFragment 替换 status_bar_container(状态栏通知显示区域)
+                CollapsedStatusBarFragment statusBarFragment =
+                        (CollapsedStatusBarFragment) fragment;
+
+                PhoneStatusBarView oldStatusBarView = mStatusBarView;
+                mStatusBarView = (PhoneStatusBarView) statusBarFragment.getView();
+                //传递statusBar处理下拉事件
+                mStatusBarView.setBar(this);
+                //传递 NotificationPanelView 显示下拉UI控制
+                mStatusBarView.setPanel(mNotificationPanelViewController);
+                mStatusBarView.setScrimController(mScrimController);
+                //初始化通知栏区域
+                statusBarFragment.initNotificationIconArea(mNotificationIconAreaController);
+                ......
+                    
+            }).getFragmentManager()
+            .beginTransaction()
+            .replace(R.id.status_bar_container, new CollapsedStatusBarFragment(),
+                    CollapsedStatusBarFragment.TAG)
+            .commit();
+    .....</code></pre>
+
+
+
+<p>CollapsedStatusBarFragment</p>
+
+
+
+<pre class="wp-block-code"><code>①createAndAddWindows
+    public void createAndAddWindows(@Nullable RegisterStatusBarResult result) {
+        //创建状态栏
+        makeStatusBarView(result);
+        mNotificationShadeWindowController.attach();
+        //创建状态栏的窗口
+        mStatusBarWindowController.attach();
+    }
+②makeStatusBarView
+protected void makeStatusBarView(@Nullable RegisterStatusBarResult result) {
+    final Context context = mContext;
+    .....
+    FragmentHostManager.get(mPhoneStatusBarWindow)
+            .addTagListener(CollapsedStatusBarFragment.TAG, (tag, fragment) -> {
+                //CollapsedStatusBarFragment 替换 status_bar_container(状态栏通知显示区域)
+                CollapsedStatusBarFragment statusBarFragment =
+                        (CollapsedStatusBarFragment) fragment;
+
+                PhoneStatusBarView oldStatusBarView = mStatusBarView;
+                mStatusBarView = (PhoneStatusBarView) statusBarFragment.getView();
+                //传递statusBar处理下拉事件
+                mStatusBarView.setBar(this);
+                //传递 NotificationPanelView 显示下拉UI控制
+                mStatusBarView.setPanel(mNotificationPanelViewController);
+                mStatusBarView.setScrimController(mScrimController);
+                //初始化通知栏区域
+                statusBarFragment.initNotificationIconArea(mNotificationIconAreaController);
+                ......
+                    
+            }).getFragmentManager()
+            .beginTransaction()
+            .replace(R.id.status_bar_container, new CollapsedStatusBarFragment(),
+                    CollapsedStatusBarFragment.TAG)
+            .commit();
+    .....
+2、CollapsedStatusBarFragment
+①onCreateView
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.status_bar, container, false);
+    }
+②initNotificationIconArea
+public void initNotificationIconArea(NotificationIconAreaController
+        notificationIconAreaController) {
+    //notification_icon_area是在status_bar.xml的布局，它是属于通知Notification    
+    //获取到 notification_icon_area，FrameLayout转为ViewGroup，
+    ViewGroup notificationIconArea = mStatusBar.findViewById(R.id.notification_icon_area);
+    //调用 notificationIconAreaController 获取通知要显示的view(LinearLayout)
+    //在4中跟进
+    mNotificationIconAreaInner =
+            notificationIconAreaController.getNotificationInnerAreaView();
+    //如果已经有显示的view，通过 view 父布局将其自身remove，然后再重新addView。
+    //最后将 mNotificationIconAreaInner 显示出来(设置透明度为1，visibility为VISIBLE)
+    if (mNotificationIconAreaInner.getParent() != null) {
+        ((ViewGroup) mNotificationIconAreaInner.getParent())
+                .removeView(mNotificationIconAreaInner);
+    }
+    notificationIconArea.addView(mNotificationIconAreaInner);
+
+    //与上面一样
+    ViewGroup statusBarCenteredIconArea = mStatusBar.findViewById(R.id.centered_icon_area);
+    mCenteredIconArea = notificationIconAreaController.getCenteredNotificationAreaView();
+    if (mCenteredIconArea.getParent() != null) {
+        ((ViewGroup) mCenteredIconArea.getParent())
+                .removeView(mCenteredIconArea);
+    }
+    statusBarCenteredIconArea.addView(mCenteredIconArea);
+
+    //默认为显示，直到我们知道其他情况
+    // Default to showing until we know otherwise.
+    showNotificationIconArea(false);
+}
+③showNotificationIconArea
+当状态栏下拉时，状态栏中的图标icon会慢慢的变成透明和不可见，就是通过hideSystemIconArea(true), hideNotificationIconArea(true）
+
+//当状态栏下拉时，设置状态栏中的图标icon会慢慢的变成透明和不可见    
+public void hideNotificationIconArea(boolean animate) {
+        animateHide(mNotificationIconAreaInner, animate);
+        animateHide(mCenteredIconArea, animate);
+    }
+//设置状态栏图标透明度为1，visibility为VISIBLE
+    public void showNotificationIconArea(boolean animate) {
+        animateShow(mNotificationIconAreaInner, animate);
+        animateShow(mCenteredIconArea, animate);
+    }
+
+    public void hideOperatorName(boolean animate) {
+        if (mOperatorNameFrame != null) {
+            animateHide(mOperatorNameFrame, animate);
+        }
+    }
+
+    public void showOperatorName(boolean animate) {
+        if (mOperatorNameFrame != null) {
+            animateShow(mOperatorNameFrame, animate);
+        }
+④animateShow
+    private void animateShow(View v, boolean animate) {
+        v.animate().cancel();
+        //(设置透明度为1，visibility为VISIBLE)
+        v.setVisibility(View.VISIBLE);
+        if (!animate) {
+            v.setAlpha(1f);
+            return;
+        }
+        .....
+    }
+⑤animateHiddenState
+//将视图动画化为 INVISIBLE 或 GONE    
+private void animateHiddenState(final View v, int state, boolean animate) {
+        v.animate().cancel();
+        if (!animate) {
+            v.setAlpha(0f);
+            v.setVisibility(state);
+            return;
+        }
+
+        v.animate()
+                .alpha(0f)
+                .setDuration(160)
+                .setStartDelay(0)
+                .setInterpolator(Interpolators.ALPHA_OUT)
+                .withEndAction(() -> v.setVisibility(state));
+    }</code></pre>
+
+
+
+<p>status_bar.xml</p>
+
+
+
+<pre class="wp-block-code"><code>&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;!--
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+&lt;!--    android:background="@drawable/status_bar_closed_default_background" -->
+&lt;com.android.systemui.statusbar.phone.PhoneStatusBarView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/status_bar_height"
+    android:id="@+id/status_bar"
+    android:orientation="vertical"
+    android:focusable="false"
+    android:descendantFocusability="afterDescendants"
+    android:accessibilityPaneTitle="@string/status_bar"
+    >
+
+    &lt;!-- add for KGDAANWIKFRA-135 -->
+    &lt;View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:id="@+id/status_bar_dark_view"
+        android:background="#ff000000"
+        android:visibility="gone" />
+    //&lt;!--通知灯，默认gone-->
+    &lt;ImageView
+        android:id="@+id/notification_lights_out"
+        android:layout_width="@dimen/status_bar_icon_size"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/status_bar_padding_start"
+        android:paddingBottom="2dip"
+        android:src="@drawable/ic_sysbar_lights_out_dot_small"
+        android:scaleType="center"
+        android:visibility="gone"
+        />
+    //&lt;!--状态栏内容-->
+    &lt;LinearLayout android:id="@+id/status_bar_contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/status_bar_padding_start"
+        android:paddingEnd="@dimen/status_bar_padding_end"
+        android:paddingTop="@dimen/status_bar_padding_top"
+        android:orientation="horizontal"
+        >
+        &lt;FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1">
+
+            &lt;include layout="@layout/heads_up_status_bar_layout" />
+
+            &lt;!-- The alpha of the left side is controlled by PhoneStatusBarTransitions, and the
+             individual views are controlled by StatusBarManager disable flags DISABLE_CLOCK and
+             DISABLE_NOTIFICATION_ICONS, respectively -->
+            &lt;LinearLayout
+                android:id="@+id/status_bar_left_side"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:clipChildren="false"
+            >
+                &lt;ViewStub
+                    android:id="@+id/operator_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout="@layout/operator_name" />
+
+                &lt;com.android.systemui.statusbar.policy.Clock
+                    android:id="@+id/clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/TextAppearance.StatusBar.Clock"
+                    android:singleLine="true"
+                    android:paddingStart="@dimen/status_bar_left_clock_starting_padding"
+                    android:paddingEnd="@dimen/status_bar_left_clock_end_padding"
+                    android:gravity="center_vertical|start"
+                />
+
+                //&lt;!--通知图标区域-->
+                &lt;com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+                    android:id="@+id/notification_icon_area"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:clipChildren="false"/>
+
+            &lt;/LinearLayout>
+        &lt;/FrameLayout>
+
+        &lt;!-- Space should cover the notch (if it exists) and let other views lay out around it -->
+        &lt;android.widget.Space
+            android:id="@+id/cutout_space_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+        />
+
+        //居中的图标区域        
+        &lt;com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+            android:id="@+id/centered_icon_area"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:gravity="center_horizontal|center_vertical"/>
+
+        &lt;com.android.keyguard.AlphaOptimizedLinearLayout android:id="@+id/system_icon_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            >
+            //&lt;!--系统图标-->
+            &lt;include layout="@layout/system_icons" />
+        &lt;/com.android.keyguard.AlphaOptimizedLinearLayout>
+    &lt;/LinearLayout>
+    //&lt;!--紧急密码管理员文本-->
+    &lt;ViewStub
+        android:id="@+id/emergency_cryptkeeper_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout="@layout/emergency_cryptkeeper_text"
+    />
+&lt;/com.android.systemui.statusbar.phone.PhoneStatusBarView></code></pre>
+
+
+
+<p>NotificationIconAreaController</p>
+
+
+
+<pre class="wp-block-code"><code>getNotificationInnerAreaView
+    /**
+     * Returns the view that represents the notification area.+
+     * 返回表示通知区域的视图。
+     */
+    public View getNotificationInnerAreaView() {
+        return mNotificationIconArea;
+    }
+initializeNotificationAreaViews
+/**
+ * Initializes the views that will represent the notification area.
+ * 初始化将表示通知区域的视图。
+ */
+protected void initializeNotificationAreaViews(Context context) {
+    reloadDimens(context);
+    
+    LayoutInflater layoutInflater = LayoutInflater.from(context);
+    //通知图标区域布局
+    mNotificationIconArea = inflateIconArea(layoutInflater);
+    //通知图标
+    mNotificationIcons = mNotificationIconArea.findViewById(R.id.notificationIcons);
+    //获取通知滚动布局
+    mNotificationScrollLayout = mStatusBar.getNotificationScrollLayout();
+    //中心图标区域布局
+    mCenteredIconArea = layoutInflater.inflate(R.layout.center_icon_area, null);
+    //居中的图标
+    mCenteredIcon = mCenteredIconArea.findViewById(R.id.centeredIcon);
+
+    initAodIcons();
+}
+inflateIconArea
+
+    protected View inflateIconArea(LayoutInflater inflater) {
+        return inflater.inflate(R.layout.notification_icon_area, null);
+    }</code></pre>
+
+
+
+<p>status icon加载流程</p>
+
+
+
+<p>1、 status_bar.xml</p>
+
+
+
+<pre class="wp-block-code"><code> &lt;com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+            android:id="@+id/centered_icon_area"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:gravity="center_horizontal|center_vertical"/>
+
+        &lt;com.android.keyguard.AlphaOptimizedLinearLayout android:id="@+id/system_icon_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            >
+            &lt;!--系统图标-->
+            &lt;include layout="@layout/system_icons" />
+        &lt;/com.android.keyguard.AlphaOptimizedLinearLayout></code></pre>
+
+
+
+<p>2、system_icons.xml</p>
+
+
+
+<pre class="wp-block-code"><code>&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:systemui="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/system_icons"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+    //StatusIconContainer继承AlphaOptimizedLinearLayout
+    &lt;com.android.systemui.statusbar.phone.StatusIconContainer android:id="@+id/statusIcons"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/signal_cluster_battery_padding"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"/>
+
+    &lt;com.android.systemui.BatteryMeterView android:id="@+id/battery"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        systemui:textAppearance="@style/TextAppearance.StatusBar.Clock" />
+&lt;/LinearLayout></code></pre>
+
+
+
+<p>3、AlphaOptimizedLinearLayout</p>
+
+
+
+<pre class="wp-block-code"><code> //该方法用来标记当前view是否存在过度绘制，存在返回ture，不存在返回false，
+    //api里面默认返回为true，status icon不存在过度绘制。
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }</code></pre>
+
+
+
+<p>4、CollapsedStatusBarFragment</p>
+
+
+
+<pre class="wp-block-code"><code> @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mStatusBar = (PhoneStatusBarView) view;
+        if (savedInstanceState != null &amp;&amp; savedInstanceState.containsKey(EXTRA_PANEL_STATE)) {
+            mStatusBar.restoreHierarchyState(
+                    savedInstanceState.getSparseParcelableArray(EXTRA_PANEL_STATE));
+        }
+......
+    }</code></pre>
+
+
+
+<p>5、StatusBarIconController</p>
+
+
+
+<pre class="wp-block-code"><code>①DarkIconManager
+    /**
+     * Version of ViewGroup that observes state from the DarkIconDispatcher.
+     */
+    public static class DarkIconManager extends IconManager {
+        private final DarkIconDispatcher mDarkIconDispatcher;
+        private int mIconHPadding;
+
+        public DarkIconManager(LinearLayout linearLayout, CommandQueue commandQueue) {
+            super(linearLayout, commandQueue);
+            mIconHPadding = mContext.getResources().getDimensionPixelSize(
+                    R.dimen.status_bar_icon_padding);
+            mDarkIconDispatcher = Dependency.get(DarkIconDispatcher.class);
+        }
+        //每个icon应该就是对应着代表顺序的index和数据类型为String的slot
+        @Override
+        protected void onIconAdded(int index, String slot, boolean blocked,
+                StatusBarIconHolder holder) {
+            StatusIconDisplayable view = addHolder(index, slot, blocked, holder);
+            mDarkIconDispatcher.addDarkReceiver((DarkReceiver) view);
+        }
+        .....
+
+        //onSetIcon可能就是刷新icon状态的
+        @Override
+        public void onSetIcon(int viewIndex, StatusBarIcon icon) {
+            super.onSetIcon(viewIndex, icon);
+            mDarkIconDispatcher.applyDark((DarkReceiver) mGroup.getChildAt(viewIndex));
+        }
+        .....
+
+    }
+②IconManager
+public static class IconManager implements DemoMode {
+    .....
+    protected void onIconAdded(int index, String slot, boolean blocked,
+        StatusBarIconHolder holder) {
+        
+        addHolder(index, slot, blocked, holder);
+    }    
+    
+    protected StatusIconDisplayable addHolder(int index, String slot, boolean blocked,
+        StatusBarIconHolder holder) {
+        switch (holder.getType()) {
+            case TYPE_ICON:
+                return addIcon(index, slot, blocked, holder.getIcon());
+    
+            case TYPE_WIFI:
+                return addSignalIcon(index, slot, holder.getWifiState());
+    
+            case TYPE_MOBILE:
+                return addMobileIcon(index, slot, holder.getMobileState());
+        }
+        return null;
+    }
+    
+    @VisibleForTesting
+    protected StatusBarIconView addIcon(int index, String slot, boolean blocked,
+            StatusBarIcon icon) {
+        
+            StatusBarIconView view = onCreateStatusBarIconView(slot, blocked);
+            view.set(icon);
+            mGroup.addView(view, index, onCreateLayoutParams());
+            return view;
+    }
+        .....
+}</code></pre>
+
+
+
+<p>6、StatusBarIconControllerImpl</p>
+
+
+
+<pre class="wp-block-code"><code>//继承StatusBarIconList
+public class StatusBarIconControllerImpl extends StatusBarIconList implements Tunable,
+        ConfigurationListener, Dumpable, CommandQueue.Callbacks, StatusBarIconController {   
+    ......        
+    @Inject
+    public StatusBarIconControllerImpl(Context context, CommandQueue commandQueue) {
+        //config_statusBarIcons
+        super(context.getResources().getStringArray(
+                com.android.internal.R.array.config_statusBarIcons));
+        Dependency.get(ConfigurationController.class).addCallback(this);
+     .....
+    }
+}</code></pre>
+
+
+
+<h3 class="wp-block-heading">7、StatusBarIconList</h3>
+
+
+
+<p>在初始化的时候就已经定义好了所有的slots，然后从framework中加载出来，index就是string-array中的顺序。</p>
+
+
+
+<pre class="wp-block-code"><code>public class StatusBarIconList {
+    private ArrayList&lt;Slot> mSlots = new ArrayList&lt;>();
+
+    public StatusBarIconList(String&#91;] slots) {
+        final int N = slots.length;
+        for (int i=0; i &lt; N; i++) {
+            mSlots.add(new Slot(slots&#91;i], null));
+        }
+    }</code></pre>
+
+
+
+<p>8、config_statusBarIcons</p>
+
+
+
+<pre class="wp-block-code"><code>&lt;string-array name="config_statusBarIcons">
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_rotate&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_headset&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_data_saver&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_managed_profile&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_ime&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_sync_failing&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_sync_active&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_cast&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_hotspot&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_location&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_bluetooth&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_nfc&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_tty&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_speakerphone&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_zen&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_mute&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_volume&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_vpn&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_ethernet&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_wifi&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_mobile&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_airplane&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_cdma_eri&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_data_connection&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_phone_evdo_signal&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_phone_signal&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_battery&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_alarm_clock&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_secure&lt;/xliff:g>&lt;/item>
+        &lt;item>&lt;xliff:g id="id">@string/status_bar_clock&lt;/xliff:g>&lt;/item>
+    &lt;/string-array>
+ 
+    &lt;string translatable="false" name="status_bar_rotate">rotate&lt;/string>
+    &lt;string translatable="false" name="status_bar_headset">headset&lt;/string>
+    &lt;string translatable="false" name="status_bar_data_saver">data_saver&lt;/string>
+    &lt;string translatable="false" name="status_bar_managed_profile">managed_profile&lt;/string>
+    &lt;string translatable="false" name="status_bar_ime">ime&lt;/string>
+    &lt;string translatable="false" name="status_bar_sync_failing">sync_failing&lt;/string>
+    &lt;string translatable="false" name="status_bar_sync_active">sync_active&lt;/string>
+    &lt;string translatable="false" name="status_bar_cast">cast&lt;/string>
+    &lt;string translatable="false" name="status_bar_hotspot">hotspot&lt;/string>
+    &lt;string translatable="false" name="status_bar_location">location&lt;/string>
+    &lt;string translatable="false" name="status_bar_bluetooth">bluetooth&lt;/string>
+    &lt;string translatable="false" name="status_bar_nfc">nfc&lt;/string>
+    &lt;string translatable="false" name="status_bar_tty">tty&lt;/string>
+    &lt;string translatable="false" name="status_bar_speakerphone">speakerphone&lt;/string>
+    &lt;string translatable="false" name="status_bar_zen">zen&lt;/string>
+    &lt;string translatable="false" name="status_bar_mute">mute&lt;/string>
+    &lt;string translatable="false" name="status_bar_volume">volume&lt;/string>
+    &lt;string translatable="false" name="status_bar_wifi">wifi&lt;/string>
+    &lt;string translatable="false" name="status_bar_cdma_eri">cdma_eri&lt;/string>
+    &lt;string translatable="false" name="status_bar_data_connection">data_connection&lt;/string>
+    &lt;string translatable="false" name="status_bar_phone_evdo_signal">phone_evdo_signal&lt;/string>
+    &lt;string translatable="false" name="status_bar_phone_signal">phone_signal&lt;/string>
+    &lt;string translatable="false" name="status_bar_battery">battery&lt;/string>
+    &lt;string translatable="false" name="status_bar_alarm_clock">alarm_clock&lt;/string>
+    &lt;string translatable="false" name="status_bar_secure">secure&lt;/string>
+    &lt;string translatable="false" name="status_bar_clock">clock&lt;/string>
+    &lt;string translatable="false" name="status_bar_mobile">mobile&lt;/string>
+    &lt;string translatable="false" name="status_bar_vpn">vpn&lt;/string>
+    &lt;string translatable="false" name="status_bar_ethernet">ethernet&lt;/string>
+    &lt;string translatable="false" name="status_bar_airplane">airplane&lt;/string></code></pre>
+</div>
+</article></main>
+<footer>© snowCrane · GitHub Pages archive</footer>
+<script defer src="/js/snowcrane-features.js"></script>
+</body></html>

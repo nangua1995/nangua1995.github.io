@@ -1,0 +1,8 @@
+.wp-article{max-width:900px}.wp-article h1{font-size:38px;line-height:1.3}.source-link{margin:20px 0}
+.wp-content{border-top:1px solid var(--line);margin-top:24px;padding-top:24px;overflow-wrap:anywhere}
+.wp-content img,.wp-content video,.wp-content iframe{max-width:100%;height:auto}.wp-content iframe{min-height:420px}
+.wp-content figure{max-width:100%;margin:24px auto}.wp-content figcaption{color:var(--muted);font-size:12px;text-align:center}
+.wp-content pre{overflow:auto;background:var(--surface);padding:16px}.wp-content table{display:block;max-width:100%;overflow:auto;border-collapse:collapse}
+.wp-content th,.wp-content td{border:1px solid var(--line);padding:7px 10px}.wp-content a{word-break:break-all}
+.wp-content blockquote{border-left:3px solid var(--accent);margin-left:0;padding-left:18px;color:var(--muted)}
+@media(max-width:650px){.wp-article h1{font-size:28px}.wp-content iframe{min-height:240px}}
