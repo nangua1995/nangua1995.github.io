@@ -60,6 +60,10 @@
     renderResults("");
   }
   async function openArchive() {
+    if (!drawer.hidden) {
+      drawer.hidden = true;
+      return;
+    }
     drawer.hidden = false;
     if (!archiveIndex) archiveIndex = await fetch("/archive-index.json").then(r => r.json());
     renderArchive("archive");
