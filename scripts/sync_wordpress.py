@@ -11,7 +11,13 @@ ROOT = Path(__file__).resolve().parent.parent
 ORIGIN = "https://zhinengzuocang.cn"
 API = ORIGIN + "/wp-json/wp/v2/posts"
 OUT = ROOT / "wordpress"
-EXCLUDED_IDS = {909, 910, 911}  # Already mirrored from the Markdown blog.
+EXCLUDED_IDS = {
+    101, 137, 138, 188, 193, 197, 206, 216, 225, 238, 245,
+    250, 258, 268, 273, 277, 280, 290, 298, 304, 311,
+    909, 910, 911,
+}
+# 909–911 are already mirrored from Markdown. The other IDs are intentionally
+# hidden from this archive and must stay excluded during future daily syncs.
 
 
 def fetch_posts():

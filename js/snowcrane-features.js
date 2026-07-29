@@ -25,6 +25,10 @@
   drawer.hidden = true;
   drawer.innerHTML = '<div class="sc-archive-head"><div class="sc-tabs"><button data-tab="archive"></button><button data-tab="tag"></button><button data-tab="category"></button></div><button class="sc-archive-close">×</button></div><div class="sc-archive-body"></div>';
   document.body.appendChild(drawer);
+  const archiveTab = document.createElement("button");
+  archiveTab.className = "sc-archive-tab";
+  archiveTab.type = "button";
+  document.body.appendChild(archiveTab);
   const input = modal.querySelector("input");
   const results = modal.querySelector(".sc-results");
   let index;
@@ -40,6 +44,7 @@
     drawer.querySelector('[data-tab="archive"]').textContent = "▱ " + t.archiveTab;
     drawer.querySelector('[data-tab="tag"]').textContent = "◇ " + t.tagTab;
     drawer.querySelector('[data-tab="category"]').textContent = "□ " + t.categoryTab;
+    archiveTab.textContent = "◷ " + t.archiveTab;
     input.placeholder = t.placeholder;
   }
   function showMessage(message) {
@@ -62,9 +67,11 @@
   async function openArchive() {
     if (!drawer.hidden) {
       drawer.hidden = true;
+      archiveTab.classList.remove("open");
       return;
     }
     drawer.hidden = false;
+    archiveTab.classList.add("open");
     if (!archiveIndex) archiveIndex = await fetch("/archive-index.json").then(r => r.json());
     renderArchive("archive");
   }
@@ -115,6 +122,7 @@
 
   toolbar.querySelector('[data-action="search"]').onclick = openSearch;
   toolbar.querySelector('[data-action="archive"]').onclick = openArchive;
+  archiveTab.onclick = openArchive;
   toolbar.querySelector('[data-action="theme"]').onclick = function () {
     root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
     localStorage.setItem("snowcrane-theme", root.dataset.theme);
@@ -129,13 +137,13 @@
     updateLabels();
   };
   modal.querySelector(".sc-close").onclick = () => { modal.hidden = true; };
-  drawer.querySelector(".sc-archive-close").onclick = () => { drawer.hidden = true; };
+  drawer.querySelector(".sc-archive-close").onclick = () => { drawer.hidden = true; archiveTab.classList.remove("open"); };
   drawer.querySelectorAll("[data-tab]").forEach(button => button.onclick = () => renderArchive(button.dataset.tab));
   modal.onclick = e => { if (e.target === modal) modal.hidden = true; };
   input.oninput = () => renderResults(input.value);
   document.addEventListener("keydown", e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); openSearch(); }
-    if (e.key === "Escape") { modal.hidden = true; drawer.hidden = true; }
+    if (e.key === "Escape") { modal.hidden = true; drawer.hidden = true; archiveTab.classList.remove("open"); }
   });
   updateLabels();
 })();
