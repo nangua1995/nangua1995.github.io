@@ -1,0 +1,33 @@
+{
+  "autonomous-vehicles-landscape": {
+    "title": "Autonomous delivery vehicles and autonomous vehicles: development status, chip solutions and architecture",
+    "summary": "The development status, chip solutions, architecture and commercialization of the two major tracks of unmanned delivery vehicles and Robotaxi (as of mid-2026).",
+    "tags": [
+      "smart car",
+      "Autonomous driving",
+      "Robotaxi",
+      "Unmanned delivery vehicle"
+    ]
+  },
+  "domain-controller-market": {
+    "title": "Domain controller OEM shipments and OEM procurement pattern (2025.6 — 2026.6)",
+    "summary": "Covers the supplier ranking of cockpit + smart driving domain control, OEM procurement pattern, shipment volume and market share changes in 2025-2026.",
+    "tags": [
+      "smart car",
+      "domain controller",
+      "Integrated cabin and driving",
+      "supply chain"
+    ]
+  },
+  "cockpit-driving-fusion": {
+    "title": "Cabin-driving integrated solution and architecture design",
+    "summary": "The architecture evolution, chip platform, software layering, safety isolation and mass production implementation of the integrated cabin and driving system (as of mid-2026).",
+    "tags": [
+      "smart car",
+      "Integrated cabin and driving",
+      "Smart cockpit",
+      "Smart driving",
+      "Architecture design"
+    ]
+  }
+}

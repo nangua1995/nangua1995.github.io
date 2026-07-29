@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>技术文章 · snowCrane</title>
+<link rel="stylesheet" href="static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+</head><body data-title-zh="技术文章" data-title-en="Technical Articles">
+<header class="hero"><div class="hero-inner"><a class="brand" href="">snowCrane</a>
+<nav><a href="" data-zh="文章" data-en="Articles">文章</a>
+<a href="https://zhinengzuocang.cn/cockpit/" data-zh="招聘雷达" data-en="Talent Radar">招聘雷达</a>
+<a href="https://github.com/nangua1995">GitHub</a>
+<button type="button" id="langToggle">EN</button></nav></div></header>
+<main><section class="intro"><h1 data-zh="智能座舱与汽车软件" data-en="Smart Cockpit & Automotive Software">智能座舱与汽车软件</h1>
+<p data-zh="服务器博客的 GitHub Pages 静态镜像，文章原文同时保存在仓库中。" data-en="A static GitHub Pages mirror of the server blog. The Markdown sources are preserved in this repository.">服务器博客的 GitHub Pages 静态镜像，文章原文同时保存在仓库中。</p></section>
+<ul class="posts"><li><a href="post/autonomous-vehicles-landscape/"><time>2026-06-11</time>
+<h2 data-zh="无人配送车与无人驾驶汽车：发展现状、芯片方案与架构" data-en="Autonomous delivery vehicles and autonomous vehicles: development status, chip solutions and architecture">无人配送车与无人驾驶汽车：发展现状、芯片方案与架构</h2>
+<p data-zh="无人配送车与 Robotaxi 两大赛道发展现状、芯片方案、架构与商业化落地（截至 2026 年中）。" data-en="The development status, chip solutions, architecture and commercialization of the two major tracks of unmanned delivery vehicles and Robotaxi (as of mid-2026).">无人配送车与 Robotaxi 两大赛道发展现状、芯片方案、架构与商业化落地（截至 2026 年中）。</p>
+<span data-zh="#智能汽车 #自动驾驶 #Robotaxi #无人配送车" data-en="#smart car #Autonomous driving #Robotaxi #Unmanned delivery vehicle">#智能汽车 #自动驾驶 #Robotaxi #无人配送车</span></a></li><li><a href="post/domain-controller-market/"><time>2026-06-11</time>
+<h2 data-zh="域控制器 OEM 出货与主机厂采购格局（2025.6 — 2026.6）" data-en="Domain controller OEM shipments and OEM procurement pattern (2025.6 — 2026.6)">域控制器 OEM 出货与主机厂采购格局（2025.6 — 2026.6）</h2>
+<p data-zh="覆盖 2025-2026 年座舱+智驾域控的供应商排名、主机厂采购格局、出货量与市场份额变化。" data-en="Covers the supplier ranking of cockpit + smart driving domain control, OEM procurement pattern, shipment volume and market share changes in 2025-2026.">覆盖 2025-2026 年座舱+智驾域控的供应商排名、主机厂采购格局、出货量与市场份额变化。</p>
+<span data-zh="#智能汽车 #域控制器 #舱驾一体 #供应链" data-en="#smart car #domain controller #Integrated cabin and driving #supply chain">#智能汽车 #域控制器 #舱驾一体 #供应链</span></a></li><li><a href="post/cockpit-driving-fusion/"><time>2026-06-11</time>
+<h2 data-zh="舱驾一体方案与架构设计" data-en="Cabin-driving integrated solution and architecture design">舱驾一体方案与架构设计</h2>
+<p data-zh="舱驾一体的架构演进、芯片平台、软件分层、安全隔离与量产落地情况（截至 2026 年中）。" data-en="The architecture evolution, chip platform, software layering, safety isolation and mass production implementation of the integrated cabin and driving system (as of mid-2026).">舱驾一体的架构演进、芯片平台、软件分层、安全隔离与量产落地情况（截至 2026 年中）。</p>
+<span data-zh="#智能汽车 #舱驾一体 #智能座舱 #智驾 #架构设计" data-en="#smart car #Integrated cabin and driving #Smart cockpit #Smart driving #Architecture design">#智能汽车 #舱驾一体 #智能座舱 #智驾 #架构设计</span></a></li></ul></main><footer data-zh="© snowCrane · GitHub Pages 静态镜像" data-en="© snowCrane · GitHub Pages mirror">© snowCrane · GitHub Pages 静态镜像</footer>
+<script>
+(function(){
+  function apply(lang){
+    document.documentElement.lang=lang==="en"?"en":"zh-CN";
+    document.querySelectorAll("[data-zh][data-en]").forEach(function(el){el.textContent=el.dataset[lang];});
+    document.title=document.body.dataset["title"+(lang==="en"?"En":"Zh")]+" · snowCrane";
+    document.getElementById("langToggle").textContent=lang==="en"?"中文":"EN";
+    if(window.setArticleLanguage) window.setArticleLanguage(lang);
+    localStorage.setItem("snowcrane-lang",lang);
+  }
+  document.getElementById("langToggle").onclick=function(){
+    apply(document.documentElement.lang==="en"?"zh":"en");
+  };
+  apply(localStorage.getItem("snowcrane-lang")==="en"?"en":"zh");
+})();
+</script>
+</body></html>

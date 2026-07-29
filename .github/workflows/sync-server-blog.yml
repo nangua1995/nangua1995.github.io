@@ -1,0 +1,24 @@
+name: Sync server blog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 10 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mirror published articles
+        run: python3 scripts/sync_server_blog.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blog
+          git diff --cached --quiet || git commit -m "chore: sync server blog"
+          git push

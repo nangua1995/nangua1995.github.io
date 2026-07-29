@@ -1,0 +1,45 @@
+{
+  "source": "https://zhinengzuocang.cn/blog",
+  "items": [
+    {
+      "slug": "autonomous-vehicles-landscape",
+      "title": "无人配送车与无人驾驶汽车：发展现状、芯片方案与架构",
+      "date": "2026-06-11",
+      "summary": "无人配送车与 Robotaxi 两大赛道发展现状、芯片方案、架构与商业化落地（截至 2026 年中）。",
+      "tags": [
+        "智能汽车",
+        "自动驾驶",
+        "Robotaxi",
+        "无人配送车"
+      ],
+      "reading_time": 23
+    },
+    {
+      "slug": "domain-controller-market",
+      "title": "域控制器 OEM 出货与主机厂采购格局（2025.6 — 2026.6）",
+      "date": "2026-06-11",
+      "summary": "覆盖 2025-2026 年座舱+智驾域控的供应商排名、主机厂采购格局、出货量与市场份额变化。",
+      "tags": [
+        "智能汽车",
+        "域控制器",
+        "舱驾一体",
+        "供应链"
+      ],
+      "reading_time": 10
+    },
+    {
+      "slug": "cockpit-driving-fusion",
+      "title": "舱驾一体方案与架构设计",
+      "date": "2026-06-11",
+      "summary": "舱驾一体的架构演进、芯片平台、软件分层、安全隔离与量产落地情况（截至 2026 年中）。",
+      "tags": [
+        "智能汽车",
+        "舱驾一体",
+        "智能座舱",
+        "智驾",
+        "架构设计"
+      ],
+      "reading_time": 31
+    }
+  ]
+}
