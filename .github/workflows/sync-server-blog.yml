@@ -19,6 +19,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add blog
+          git add blog article index.html
           git diff --cached --quiet || git commit -m "chore: sync server blog"
           git push

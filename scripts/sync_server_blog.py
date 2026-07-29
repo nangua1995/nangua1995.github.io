@@ -75,6 +75,7 @@ def main():
     translation_path = OUT / "translations.en.json"
     translations = json.loads(translation_path.read_text(encoding="utf-8")) if translation_path.exists() else {}
     cards = []
+    legacy_cards = []
     manifest = []
     for meta in items:
         slug = safe_slug(meta["slug"])
@@ -133,6 +134,36 @@ def main():
                 english.get("title", full.get("title", slug)),
             ), encoding="utf-8",
         )
+        legacy_dir = ROOT / "article" / slug
+        legacy_dir.mkdir(parents=True, exist_ok=True)
+        legacy_body = body.replace('href="../../"', 'href="/"')
+        legacy_html = shell(
+            full.get("title", slug), legacy_body, "/blog/",
+            english.get("title", full.get("title", slug)),
+        )
+        legacy_html = legacy_html.replace(
+            'href="/blog/">snowCrane', 'href="/">snowCrane',
+        ).replace(
+            'href="/blog/" data-zh="文章"', 'href="/" data-zh="文章"',
+        )
+        (legacy_dir / "index.html").write_text(legacy_html, encoding="utf-8")
+        legacy_cards.append("""<div class="post-preview">
+<a href="/article/{slug}/">
+<h2 class="post-title">{title}</h2>
+<h3 class="post-subtitle">{summary}</h3>
+<div class="post-content-preview">{summary}</div>
+</a>
+<p class="post-meta" style="margin:10px 0;">Posted by SnowCrane on {date}</p>
+<div class="tags">{tags}</div>
+</div><hr>""".format(
+            slug=slug, title=html.escape(full.get("title", slug)),
+            summary=html.escape(full.get("summary", "")),
+            date=html.escape(str(full.get("date", ""))),
+            tags=" ".join(
+                '<a href="/tags/#{0}" title="{0}">{0}</a>'.format(html.escape(tag))
+                for tag in full.get("tags", [])
+            ),
+        ))
         cards.append("""<li><a href="post/{slug}/"><time>{date}</time>
 <h2 data-zh="{title_attr}" data-en="{title_en_attr}">{title}</h2>
 <p data-zh="{summary_attr}" data-en="{summary_en_attr}">{summary}</p>
@@ -163,6 +194,20 @@ def main():
         json.dumps(translations, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
     )
     (OUT / "static" / "crane-hero.jpg").write_bytes(fetch_bytes("/static/crane-hero.jpg"))
+    homepage = ROOT / "index.html"
+    homepage_html = homepage.read_text(encoding="utf-8")
+    start_marker = "<!-- SERVER-BLOG-START -->"
+    end_marker = "<!-- SERVER-BLOG-END -->"
+    block = start_marker + "\n" + "\n".join(legacy_cards) + "\n" + end_marker
+    if start_marker in homepage_html:
+        homepage_html = re.sub(
+            re.escape(start_marker) + r"[\s\S]*?" + re.escape(end_marker),
+            block, homepage_html, count=1,
+        )
+    else:
+        anchor = '<div class="post-preview">'
+        homepage_html = homepage_html.replace(anchor, block + "\n\n" + anchor, 1)
+    homepage.write_text(homepage_html, encoding="utf-8")
     print("synced {} articles".format(len(items)))
 
 
