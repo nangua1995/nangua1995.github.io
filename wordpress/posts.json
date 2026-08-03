@@ -2,6 +2,21 @@
   "source": "https://zhinengzuocang.cn",
   "items": [
     {
+      "id": 913,
+      "path": "/article/wp-913/",
+      "title": "一次 Android 黑屏问题排查：从应用返回到 InputDispatcher 崩溃",
+      "date": "2026-08-03",
+      "source": "https://zhinengzuocang.cn/2026/08/03/一次-android-黑屏问题排查从应用返回到-inputdispatcher-崩溃/",
+      "categories": [
+        "未分类"
+      ],
+      "tags": [
+        "Input",
+        "InputVerifier",
+        "座舱技术踩坑"
+      ]
+    },
+    {
       "id": 912,
       "path": "/article/wp-912/",
       "title": "多指地图缩放中的 Input Bad Stream 分析与 InputVerifier 演进",

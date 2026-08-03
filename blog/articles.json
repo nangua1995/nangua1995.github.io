@@ -2,6 +2,32 @@
   "source": "https://zhinengzuocang.cn",
   "items": [
     {
+      "slug": "一次-android-黑屏问题排查从应用返回到-inputdispatcher-崩溃",
+      "title": "一次 Android 黑屏问题排查：从应用返回到 InputDispatcher 崩溃",
+      "date": "2026-08-03",
+      "summary": "",
+      "tags": [
+        "InputVerifier",
+        "input",
+        "座舱技术踩坑"
+      ],
+      "reading_time": "10"
+    },
+    {
+      "slug": "syncbarrier-stutter-analysis",
+      "title": "Android 11 SyncBarrier 遗留导致卡顿问题分析",
+      "date": "2026-08-03",
+      "summary": "分析 Android 11 硬件加速路径中跨线程更新 View 可能遗留 SyncBarrier、阻塞同步消息并引发卡顿或 ANR 的机制与修复方式。",
+      "tags": [
+        "Android Framework",
+        "性能优化",
+        "ViewRootImpl",
+        "SyncBarrier",
+        "ANR"
+      ],
+      "reading_time": "14"
+    },
+    {
       "slug": "cockpit-industry-cases-and-reports",
       "title": "智能座舱行业案例与报告汇总",
       "date": "2026-08-03",

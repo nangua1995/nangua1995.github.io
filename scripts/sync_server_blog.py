@@ -59,6 +59,15 @@ def tag_values(value):
     return [value] if value else []
 
 
+def absolutize_server_assets(markdown):
+    """Keep uploaded images working when Markdown is rendered on Pages."""
+    return re.sub(
+        r"\]\((/static/[^)\s]+)\)",
+        lambda match: "](" + ORIGIN + match.group(1) + ")",
+        markdown,
+    )
+
+
 def shell(title, body, depth="", en_title=None):
     return """<!doctype html>
 <html lang="zh-CN"><head>
@@ -109,7 +118,7 @@ def main():
         slug = safe_slug(meta["slug"])
         api_slug = quote(slug, safe="-_.~")
         full = fetch_json("/api/posts/" + api_slug)
-        markdown = text_value(full.get("body", ""))
+        markdown = absolutize_server_assets(text_value(full.get("body", "")))
         english = translations.get(slug, {})
         english_path = OUT / "posts" / (slug + ".en.md")
         remote_english = fetch_json("/api/posts/" + api_slug + "?lang=en")
@@ -118,7 +127,10 @@ def main():
             and remote_english.get("body")
             and remote_english["body"] != markdown
         ):
-            english_path.write_text(remote_english["body"], encoding="utf-8")
+            english_path.write_text(
+                absolutize_server_assets(text_value(remote_english["body"])),
+                encoding="utf-8",
+            )
             english = {
                 "title": remote_english.get("title", full.get("title", slug)),
                 "summary": remote_english.get("summary", full.get("summary", "")),
