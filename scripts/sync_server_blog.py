@@ -4,11 +4,14 @@ import html
 import json
 import re
 from pathlib import Path
+from urllib.parse import quote
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "blog"
-ORIGIN = "https://zhinengzuocang.cn/blog"
+# The blog is served at the domain root.  Keeping this URL canonical also
+# avoids an unnecessary redirect during each scheduled synchronization.
+ORIGIN = "https://zhinengzuocang.cn"
 
 
 def fetch_json(path):
@@ -22,13 +25,38 @@ def fetch_bytes(path):
 
 
 def safe_slug(value):
-    if not re.match(r"^[a-zA-Z0-9_-]+$", value):
-        raise ValueError("unsafe slug: " + value)
+    # Article slugs can legitimately include Chinese punctuation because the
+    # publishing form derives them from the title.  Keep them as one safe path
+    # component and URL-encode them for requests; do not impose an ASCII-only
+    # or word-character-only rule.
+    if (
+        not isinstance(value, str) or not value or len(value) > 180
+        or value in {".", ".."}
+        or any(ch in value for ch in ("/", "\\", "\x00"))
+        or any(ord(ch) < 32 for ch in value)
+    ):
+        raise ValueError("unsafe slug: " + repr(value))
     return value
 
 
 def attr(value):
     return html.escape(str(value), quote=True)
+
+
+def text_value(value):
+    """Normalize the minimal blog frontmatter parser's scalar values."""
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return " ".join(str(item) for item in value)
+    return str(value)
+
+
+def tag_values(value):
+    if isinstance(value, list):
+        return [text_value(item) for item in value if text_value(item)]
+    value = text_value(value)
+    return [value] if value else []
 
 
 def shell(title, body, depth="", en_title=None):
@@ -79,11 +107,12 @@ def main():
     manifest = []
     for meta in items:
         slug = safe_slug(meta["slug"])
-        full = fetch_json("/api/posts/" + slug)
-        markdown = full.get("body", "")
+        api_slug = quote(slug, safe="-_.~")
+        full = fetch_json("/api/posts/" + api_slug)
+        markdown = text_value(full.get("body", ""))
         english = translations.get(slug, {})
         english_path = OUT / "posts" / (slug + ".en.md")
-        remote_english = fetch_json("/api/posts/" + slug + "?lang=en")
+        remote_english = fetch_json("/api/posts/" + api_slug + "?lang=en")
         if (
             remote_english.get("translation_status") == "translated"
             and remote_english.get("body")
@@ -102,8 +131,16 @@ def main():
         article_dir.mkdir(parents=True, exist_ok=True)
         payload = json.dumps(markdown, ensure_ascii=False).replace("</", "<\\/")
         payload_en = json.dumps(english_markdown, ensure_ascii=False).replace("</", "<\\/")
-        tags = " ".join("#" + html.escape(x) for x in full.get("tags", []))
-        tags_en = " ".join("#" + html.escape(x) for x in english.get("tags", full.get("tags", [])))
+        title = text_value(full.get("title", slug))
+        summary = text_value(full.get("summary", ""))
+        date = text_value(full.get("date", ""))
+        reading_time = text_value(full.get("reading_time", ""))
+        tags_list = tag_values(full.get("tags", []))
+        en_title = text_value(english.get("title", title))
+        en_summary = text_value(english.get("summary", summary))
+        en_tags_list = tag_values(english.get("tags", tags_list))
+        tags = " ".join("#" + html.escape(x) for x in tags_list)
+        tags_en = " ".join("#" + html.escape(x) for x in en_tags_list)
         body = """<article>
 <p class="back"><a href="../../" data-zh="← 返回文章列表" data-en="← Back to articles">← 返回文章列表</a></p>
 <p class="meta">{date} · {reading_time} min read</p>
@@ -115,31 +152,24 @@ def main():
 <script type="application/json" id="sourceEn">{payload_en}</script>
 <script>window.setArticleLanguage=function(lang){{var id=lang==="en"?"sourceEn":"sourceZh";document.getElementById("content").innerHTML=marked.parse(JSON.parse(document.getElementById(id).textContent));}};</script>
 </article>""".format(
-            date=html.escape(str(full.get("date", ""))),
-            reading_time=html.escape(str(full.get("reading_time", ""))),
-            title=html.escape(full.get("title", slug)),
-            summary=html.escape(full.get("summary", "")),
+            date=html.escape(date), reading_time=html.escape(reading_time),
+            title=html.escape(title), summary=html.escape(summary),
             tags=tags, payload=payload, payload_en=payload_en,
-            title_attr=attr(full.get("title", slug)),
-            title_en_attr=attr(english.get("title", full.get("title", slug))),
-            summary_attr=attr(full.get("summary", "")),
-            summary_en_attr=attr(english.get("summary", full.get("summary", ""))),
-            tags_attr=attr(" ".join("#" + x for x in full.get("tags", []))),
-            tags_en_attr=attr(" ".join("#" + x for x in english.get("tags", full.get("tags", []))),
-            ),
+            title_attr=attr(title), title_en_attr=attr(en_title),
+            summary_attr=attr(summary), summary_en_attr=attr(en_summary),
+            tags_attr=attr(" ".join("#" + x for x in tags_list)),
+            tags_en_attr=attr(" ".join("#" + x for x in en_tags_list)),
         )
         (article_dir / "index.html").write_text(
             shell(
-                full.get("title", slug), body, "../../",
-                english.get("title", full.get("title", slug)),
+                title, body, "../../", en_title,
             ), encoding="utf-8",
         )
         legacy_dir = ROOT / "article" / slug
         legacy_dir.mkdir(parents=True, exist_ok=True)
         legacy_body = body.replace('href="../../"', 'href="/"')
         legacy_html = shell(
-            full.get("title", slug), legacy_body, "/blog/",
-            english.get("title", full.get("title", slug)),
+            title, legacy_body, "/blog/", en_title,
         )
         legacy_html = legacy_html.replace(
             'href="/blog/">snowCrane', 'href="/">snowCrane',
@@ -156,32 +186,28 @@ def main():
 <p class="post-meta" style="margin:10px 0;">Posted by SnowCrane on {date}</p>
 <div class="tags">{tags}</div>
 </div><hr>""".format(
-            slug=slug, title=html.escape(full.get("title", slug)),
-            summary=html.escape(full.get("summary", "")),
-            date=html.escape(str(full.get("date", ""))),
+            slug=quote(slug, safe="-_.~"), title=html.escape(title),
+            summary=html.escape(summary), date=html.escape(date),
             tags=" ".join(
                 '<a href="/tags/#{0}" title="{0}">{0}</a>'.format(html.escape(tag))
-                for tag in full.get("tags", [])
+                for tag in tags_list
             ),
         ))
         cards.append("""<li><a href="post/{slug}/"><time>{date}</time>
 <h2 data-zh="{title_attr}" data-en="{title_en_attr}">{title}</h2>
 <p data-zh="{summary_attr}" data-en="{summary_en_attr}">{summary}</p>
 <span data-zh="{tags_attr}" data-en="{tags_en_attr}">{tags}</span></a></li>""".format(
-            slug=slug, date=html.escape(str(full.get("date", ""))),
-            title=html.escape(full.get("title", slug)),
-            summary=html.escape(full.get("summary", "")), tags=tags,
-            title_attr=attr(full.get("title", slug)),
-            title_en_attr=attr(english.get("title", full.get("title", slug))),
-            summary_attr=attr(full.get("summary", "")),
-            summary_en_attr=attr(english.get("summary", full.get("summary", ""))),
-            tags_attr=attr(" ".join("#" + x for x in full.get("tags", []))),
-            tags_en_attr=attr(" ".join("#" + x for x in english.get("tags", full.get("tags", []))),
-            ),
+            slug=quote(slug, safe="-_.~"), date=html.escape(date),
+            title=html.escape(title), summary=html.escape(summary), tags=tags,
+            title_attr=attr(title), title_en_attr=attr(en_title),
+            summary_attr=attr(summary), summary_en_attr=attr(en_summary),
+            tags_attr=attr(" ".join("#" + x for x in tags_list)),
+            tags_en_attr=attr(" ".join("#" + x for x in en_tags_list)),
         ))
-        manifest.append({key: full.get(key) for key in (
-            "slug", "title", "date", "summary", "tags", "reading_time"
-        )})
+        manifest.append({
+            "slug": slug, "title": title, "date": date, "summary": summary,
+            "tags": tags_list, "reading_time": reading_time,
+        })
     body = """<section class="intro"><h1 data-zh="智能座舱与汽车软件" data-en="Smart Cockpit & Automotive Software">智能座舱与汽车软件</h1>
 <p data-zh="服务器博客的 GitHub Pages 静态镜像，文章原文同时保存在仓库中。" data-en="A static GitHub Pages mirror of the server blog. The Markdown sources are preserved in this repository.">服务器博客的 GitHub Pages 静态镜像，文章原文同时保存在仓库中。</p></section>
 <ul class="posts">{}</ul>""".format("".join(cards))

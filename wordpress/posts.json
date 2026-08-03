@@ -2,6 +2,22 @@
   "source": "https://zhinengzuocang.cn",
   "items": [
     {
+      "id": 912,
+      "path": "/article/wp-912/",
+      "title": "多指地图缩放中的 Input Bad Stream 分析与 InputVerifier 演进",
+      "date": "2026-08-03",
+      "source": "https://zhinengzuocang.cn/2026/08/03/多指地图缩放中的-input-bad-stream-分析与-inputverifier-演进/",
+      "categories": [
+        "未分类"
+      ],
+      "tags": [
+        "Android",
+        "Input",
+        "InputVerifier",
+        "多指触摸"
+      ]
+    },
+    {
       "id": 872,
       "path": "/article/wp-872/",
       "title": "进制转换工具",

@@ -1,0 +1,55 @@
+> 原文发布于主站：[查看原文](https://zhinengzuocang.cn/2024/03/27/binder-native-%e5%9f%ba%e6%9c%ac%e6%a1%86%e6%9e%b6%e5%9b%be%ef%bc%88%e5%9f%ba%e4%ba%8eandroid-12-0-s%ef%bc%89/)
+
+<p>在Android中应用最多的IPC方式应该算是Binder了，Binder 是一种进程间通信机制，基于开源的 OpenBinder 实现；OpenBinder 起初由 Be Inc. 开发，后由 Plam Inc. 接手。Android从众多的跨进程通信方式中选择Binder主要是从性能和稳定性，安全性 以及版权等进行考虑的结果。</p>
+
+
+
+<p>对比看，binder在通信中只对于数据进行了一次复制（client发给binder驱动的时候），共享内存无数据复制过程，而socket/管道/消息队列都进行了两次复制。所以从效率上看共享内存和binder获胜。</p>
+
+
+
+<p>稳定性上binder是C/S结构，清晰明了，而共享内存在多线程访问上会难以进行管理。</p>
+
+
+
+<p>从安全性上看binder隔开了应用层和框架层，通过UID/PID 判断是否有权限继续操作，同时避免了直接交互，进一步防止了应用层的作恶影响到框架层。</p>
+
+
+
+<p>版权性，因为Linux的IPC方式都是受开放源代码许可协议GPL保护，Google巧妙地将GPL协议控制在内核空间，将用户空间的协议采用Apache-2.0协议。这样才能将版权问题抓的更牢固。所以在Android 1.0就引入了新的IPC方式&#8212; Binder<br></p>
+
+
+
+<h3 class="wp-block-heading">原理整理：</h3>
+
+
+
+<p>因为Linux中的进程的用户空间是不共享的，内核空间是共享的，所以IPC通信是两个用户空间（APP 进程）通过共享的内核空间（Binder驱动）进行数据交互。</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="595" height="391" src="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-27.png" alt="" class="wp-image-406" srcset="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-27.png 595w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-27-300x197.png 300w" sizes="(max-width: 595px) 100vw, 595px" /></figure>
+
+
+
+<p>整体框架：</p>
+
+
+
+<p>ServiceManager 在android系统中是一个可执行文件，位于/system/bin/servicemanager下面。在开机的时候由init.rc启动。 这里充当了client和server通信的桥梁和管理者，因为client和server的通信是双向的，所以其实Client和Server都同时会用到BC（Command）和BR（response）两种协议。图中是为了方便理解，client可以理解为逻辑上的请求端。   </p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="899" height="492" src="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-28.png" alt="" class="wp-image-407" srcset="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-28.png 899w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-28-300x164.png 300w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-28-768x420.png 768w" sizes="(max-width: 899px) 100vw, 899px" /></figure>
+
+
+
+<p>Binder 通信框架： </p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="803" height="511" src="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-31.png" alt="" class="wp-image-410" srcset="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-31.png 803w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-31-300x191.png 300w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-31-768x489.png 768w" sizes="(max-width: 803px) 100vw, 803px" /></figure>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="805" height="559" src="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-30.png" alt="" class="wp-image-409" srcset="https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-30.png 805w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-30-300x208.png 300w, https://zhinengzuocang.cn/wp-content/uploads/2024/03/图片-30-768x533.png 768w" sizes="(max-width: 805px) 100vw, 805px" /></figure>

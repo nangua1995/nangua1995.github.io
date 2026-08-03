@@ -1,6 +1,33 @@
 {
-  "source": "https://zhinengzuocang.cn/blog",
+  "source": "https://zhinengzuocang.cn",
   "items": [
+    {
+      "slug": "cockpit-industry-cases-and-reports",
+      "title": "智能座舱行业案例与报告汇总",
+      "date": "2026-08-03",
+      "summary": "汇集主机厂座舱案例、交互方案、行业报告与白皮书，作为智能座舱产品、HMI 与技术研究的单一入口。",
+      "tags": [
+        "智能座舱",
+        "行业案例",
+        "行业报告",
+        "HMI"
+      ],
+      "reading_time": "8"
+    },
+    {
+      "slug": "多指地图缩放中的-input-bad-stream-分析与-inputverifier-演进",
+      "title": "多指地图缩放中的 Input Bad Stream 分析与 InputVerifier 演进",
+      "date": "2026-08-03",
+      "summary": "从触摸事件时序、应用主线程卡顿和 InputVerifier 机制分析多指缩放中的 Bad Stream，并总结修复与验证方法。",
+      "tags": [
+        "Android",
+        "Input",
+        "InputVerifier",
+        "多指触摸",
+        "座舱技术踩坑"
+      ],
+      "reading_time": "12"
+    },
     {
       "slug": "autonomous-vehicles-landscape",
       "title": "无人配送车与无人驾驶汽车：发展现状、芯片方案与架构",
@@ -12,7 +39,7 @@
         "Robotaxi",
         "无人配送车"
       ],
-      "reading_time": 23
+      "reading_time": "23"
     },
     {
       "slug": "domain-controller-market",
@@ -25,7 +52,7 @@
         "舱驾一体",
         "供应链"
       ],
-      "reading_time": 10
+      "reading_time": "10"
     },
     {
       "slug": "cockpit-driving-fusion",
@@ -39,7 +66,414 @@
         "智驾",
         "架构设计"
       ],
-      "reading_time": 31
+      "reading_time": "31"
+    },
+    {
+      "slug": "进制转换工具",
+      "title": "进制转换工具",
+      "date": "2026-04-25",
+      "summary": "进制转换工具 进制转换工具 2进制 8进制 10进制 16进制 32进制 36进制 58进制 62进制 更多： […]",
+      "tags": [
+        "小工具"
+      ],
+      "reading_time": "23"
+    },
+    {
+      "slug": "时间小工具",
+      "title": "时间相关工具",
+      "date": "2026-04-24",
+      "summary": "时间戳转换工具 时间戳转换工具 当前时间戳: 1777040332 点击复制 停止 时间戳 转换 >> 北京时 […]",
+      "tags": [
+        "小工具"
+      ],
+      "reading_time": "36"
+    },
+    {
+      "slug": "手机和汽车的融合-以及车人家的概念",
+      "title": "手机和汽车的融合 以及车人家的概念",
+      "date": "2024-10-23",
+      "summary": "一些行业资料： 2024年10月23日，深圳——OPPO与比亚迪宣布签订战略合作协议，双方将共同推进手机与汽车 […]",
+      "tags": [],
+      "reading_time": "12"
+    },
+    {
+      "slug": "车载大模型现状",
+      "title": "从豆包&吉利 联合比赛 看大模型吹响落地冲锋号",
+      "date": "2024-10-22",
+      "summary": "特别是在当前的汽车行业，大模型正以前所未有的速度加快融入，成为推动产业升级的重要引擎。如何发挥好大模型的真正价 […]",
+      "tags": [
+        "行业前沿"
+      ],
+      "reading_time": "4"
+    },
+    {
+      "slug": "2024年小米汽车发展战略研究报告",
+      "title": "2024年小米汽车发展战略研究报告",
+      "date": "2024-10-22",
+      "summary": "转载文章，尊重原作者版权，侵权删",
+      "tags": [
+        "行业报告"
+      ],
+      "reading_time": "36"
+    },
+    {
+      "slug": "2024华为汽车发展战略研究报告",
+      "title": "2024华为汽车发展战略研究报告",
+      "date": "2024-10-22",
+      "summary": "尊重原作者版权，侵权删",
+      "tags": [
+        "行业报告"
+      ],
+      "reading_time": "37"
+    },
+    {
+      "slug": "gradle-本地配置要放在哪个路径下-来自简书-evenzhu",
+      "title": "gradle 本地配置要放在哪个路径下 来自简书-EvenZhu",
+      "date": "2024-10-22",
+      "summary": "因为梯子问题，有些时候会出现gradle下载不下来的问题，可以通过将gradle的压缩包下载下来然后放在对应路 […]",
+      "tags": [],
+      "reading_time": "8"
+    },
+    {
+      "slug": "电源管理芯片产业分析报告",
+      "title": "电源管理芯片产业分析报告",
+      "date": "2024-10-22",
+      "summary": "转载文章，尊重原作者和版权所有",
+      "tags": [
+        "行业报告"
+      ],
+      "reading_time": "39"
+    },
+    {
+      "slug": "2024奥迪analyst-day-报告",
+      "title": "2024奥迪Analyst Day 报告",
+      "date": "2024-10-15",
+      "summary": "",
+      "tags": [
+        "行业报告"
+      ],
+      "reading_time": "54"
+    },
+    {
+      "slug": "智能座舱四联屏方案by-上海宏英智能科技",
+      "title": "智能座舱四联屏方案by 上海宏英智能科技",
+      "date": "2024-10-14",
+      "summary": "部分截图：",
+      "tags": [
+        "架构设计",
+        "行业报告"
+      ],
+      "reading_time": "3"
+    },
+    {
+      "slug": "毕马威报告-聚焦座舱电动化下半场",
+      "title": "毕马威报告-聚焦座舱电动化下半场",
+      "date": "2024-10-12",
+      "summary": "",
+      "tags": [
+        "行业报告"
+      ],
+      "reading_time": "2"
+    },
+    {
+      "slug": "android-systemui-启动流程",
+      "title": "Android SystemUI 启动流程",
+      "date": "2024-04-17",
+      "summary": "SystemServer中启动 SystemServer启动后，会在Main Thread启动Activity […]",
+      "tags": [],
+      "reading_time": "53"
+    },
+    {
+      "slug": "android-通知",
+      "title": "Android 通知",
+      "date": "2024-04-12",
+      "summary": "Android developers通知設計指南： https://developer.android.goo […]",
+      "tags": [
+        "android 通知"
+      ],
+      "reading_time": "2"
+    },
+    {
+      "slug": "通知的豁免",
+      "title": "通知的豁免",
+      "date": "2024-03-27",
+      "summary": "参考android developer 链接： https://developer.android.googl […]",
+      "tags": [
+        "android 通知"
+      ],
+      "reading_time": "1"
+    },
+    {
+      "slug": "binder-framework-层基于android-12-0-s",
+      "title": "Binder Framework 层(基于android 12.0/S)",
+      "date": "2024-03-27",
+      "summary": "Binder在Fwk层通过JNI访问到Binder Native的框架，并且主要的操作是交由Binder Na […]",
+      "tags": [
+        "Binder"
+      ],
+      "reading_time": "32"
+    },
+    {
+      "slug": "android各个版本对通知notification的变更与适配",
+      "title": "Android各个版本对通知Notification的变更与适配",
+      "date": "2024-03-27",
+      "summary": "1. Android 4.1（API 级别 16） 引入了展开式通知模板（称为通知样式），可以提供较大的通知内 […]",
+      "tags": [
+        "android 通知"
+      ],
+      "reading_time": "6"
+    },
+    {
+      "slug": "binder-native-基本框架图（基于android-12-0-s）",
+      "title": "Binder Native 基本框架图（基于android 12.0/S）",
+      "date": "2024-03-27",
+      "summary": "在Android中应用最多的IPC方式应该算是Binder了，Binder 是一种进程间通信机制，基于开源的 […]",
+      "tags": [],
+      "reading_time": "5"
+    },
+    {
+      "slug": "android-binder-之-servicemanager-基于android-12-0-s",
+      "title": "Android Binder 之 ServiceManager (基于android 12.0/S)",
+      "date": "2024-03-27",
+      "summary": "Binder 原理整理： 因为Linux中的进程的用户空间是不共享的，内核空间是共享的，所以IPC通信是两个用 […]",
+      "tags": [],
+      "reading_time": "104"
+    },
+    {
+      "slug": "android-历史版本更新",
+      "title": "Android 历史版本更新",
+      "date": "2024-03-27",
+      "summary": "Android 6.0变更 https://developer.android.com/about/versi […]",
+      "tags": [],
+      "reading_time": "4"
+    },
+    {
+      "slug": "android-binder-线程池和线程池工作流程",
+      "title": "Android Binder 线程池和线程池工作流程",
+      "date": "2024-03-27",
+      "summary": "简介： 每一个进程都有且只有一个processState（单例模式）来描述当前进程在binder通信时bind […]",
+      "tags": [],
+      "reading_time": "10"
+    },
+    {
+      "slug": "android-动画-插值器",
+      "title": "Android 动画 – 插值器",
+      "date": "2024-03-20",
+      "summary": "参考：https://www.jianshu.com/p/2e5c6326371b http://inloop […]",
+      "tags": [
+        "Android动画"
+      ],
+      "reading_time": "23"
+    },
+    {
+      "slug": "android-动画-1-帧动画和补间动画",
+      "title": "Android 动画 1-帧动画和补间动画",
+      "date": "2024-03-20",
+      "summary": "在移动开发中，动画可以丰富页面的 UI 效果，一个动画包含以下几个元素 动画包含三大类型：帧动画（Frame） […]",
+      "tags": [],
+      "reading_time": "15"
+    },
+    {
+      "slug": "android-动画2-属性动画",
+      "title": "Android 动画2-属性动画",
+      "date": "2024-03-20",
+      "summary": "属性动画 属性动画与视图动画的区别 帧动画 和 视图动画 都只能对 View 对象添加动画效果，而且只能对公开 […]",
+      "tags": [],
+      "reading_time": "36"
+    },
+    {
+      "slug": "android-animation-animator-源码分析",
+      "title": "Android animation/Animator 源码分析",
+      "date": "2024-03-20",
+      "summary": "Animation（android.view.animation.Animation）对象 我们使用的时候，一 […]",
+      "tags": [
+        "Android动画"
+      ],
+      "reading_time": "17"
+    },
+    {
+      "slug": "岚图",
+      "title": "岚图",
+      "date": "2024-02-08",
+      "summary": "",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "吉利路虎",
+      "title": "吉利路虎",
+      "date": "2024-02-08",
+      "summary": "路虎揽胜 SE V8",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "理想系列",
+      "title": "理想系列",
+      "date": "2024-02-08",
+      "summary": "理想L9 理想",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "合创汽车",
+      "title": "合创汽车",
+      "date": "2024-02-08",
+      "summary": "合创A06",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "哪吒",
+      "title": "哪吒",
+      "date": "2024-02-08",
+      "summary": "哪吒S – TA PILOT4.0",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "zeekr",
+      "title": "ZEEKR",
+      "date": "2024-02-08",
+      "summary": "001 FR 豪华猎装超跑 极氪Zeekr009",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "汽车智能座舱分级与综合评价白皮书",
+      "title": "汽车智能座舱分级与综合评价白皮书",
+      "date": "2024-02-08",
+      "summary": "2023年5月17日，由中国汽车工程学会联合行业专业力量编制的《汽车智能座舱分级与综合评价白皮书》（下简称“白 […]",
+      "tags": [],
+      "reading_time": "11"
+    },
+    {
+      "slug": "路特斯",
+      "title": "路特斯",
+      "date": "2024-02-08",
+      "summary": "",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "红旗汽车",
+      "title": "红旗汽车",
+      "date": "2024-02-08",
+      "summary": "E-HS9",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "宝马",
+      "title": "宝马",
+      "date": "2024-02-08",
+      "summary": "宝马mini 2023款宝马760i",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "零跑",
+      "title": "零跑",
+      "date": "2024-02-08",
+      "summary": "零跑C11",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "知识体系",
+      "title": "写在前面",
+      "date": "2024-02-08",
+      "summary": "智能座舱在当前智能汽车的选购中 尤其是年轻一代中扮演着很重要的比较因素。汽车座舱的发展主要分为三个阶段，机械仪 […]",
+      "tags": [],
+      "reading_time": "6"
+    },
+    {
+      "slug": "极星",
+      "title": "极星",
+      "date": "2024-02-08",
+      "summary": "极星Polestar HMI",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "集度",
+      "title": "集度",
+      "date": "2024-02-08",
+      "summary": "集度 ROBO 01",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "丰田",
+      "title": "丰田",
+      "date": "2024-02-08",
+      "summary": "丰田 BZ SUV",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "雪佛兰",
+      "title": "雪佛兰",
+      "date": "2024-02-08",
+      "summary": "雪佛兰",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "凯迪拉克",
+      "title": "凯迪拉克",
+      "date": "2024-02-08",
+      "summary": "凯迪拉克CT5 凯迪拉克LYRIQ",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "克莱斯勒",
+      "title": "克莱斯勒",
+      "date": "2024-02-08",
+      "summary": "克莱斯勒Chrysler",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "飞凡",
+      "title": "飞凡",
+      "date": "2024-02-08",
+      "summary": "飞凡R7",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "吉利",
+      "title": "吉利",
+      "date": "2024-02-08",
+      "summary": "远程星瀚智能座舱",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "魅族flyme-atuo",
+      "title": "魅族Flyme ATUO",
+      "date": "2024-02-08",
+      "summary": "",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "捷尼赛斯",
+      "title": "捷尼赛斯",
+      "date": "2024-02-08",
+      "summary": "Genesis G90",
+      "tags": [],
+      "reading_time": "1"
+    },
+    {
+      "slug": "雷诺",
+      "title": "雷诺",
+      "date": "2024-02-08",
+      "summary": "雷诺Renault 车载HMI",
+      "tags": [],
+      "reading_time": "1"
     }
   ]
 }

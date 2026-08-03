@@ -3,7 +3,10 @@ name: Sync server blog
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 10 * * *"
+    # GitHub Actions supports a five-minute minimum interval.  This keeps the
+    # Pages mirror close to the publishing time without storing a GitHub key
+    # on the production server.
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write

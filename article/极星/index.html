@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>极星 · snowCrane</title>
+<link rel="stylesheet" href="/blog/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+<link rel="stylesheet" href="/css/snowcrane-features.css">
+</head><body data-title-zh="极星" data-title-en="极星">
+<header class="hero"><div class="hero-inner"><a class="brand" href="/">snowCrane</a>
+<nav><a href="/" data-zh="文章" data-en="Articles">文章</a>
+<a href="https://zhinengzuocang.cn/cockpit/" data-zh="招聘雷达" data-en="Talent Radar">招聘雷达</a>
+<a href="https://github.com/nangua1995">GitHub</a>
+<button type="button" id="langToggle">EN</button></nav></div></header>
+<main><article>
+<p class="back"><a href="/" data-zh="← 返回文章列表" data-en="← Back to articles">← 返回文章列表</a></p>
+<p class="meta">2024-02-08 · 1 min read</p>
+<h1 data-zh="极星" data-en="极星">极星</h1>
+<p class="summary" data-zh="极星Polestar HMI" data-en="极星Polestar HMI">极星Polestar HMI</p>
+<p class="tags" data-zh="" data-en=""></p>
+<div id="content" class="markdown"></div>
+<script type="application/json" id="sourceZh">"> 原文发布于主站：[查看原文](https://zhinengzuocang.cn/2024/02/08/%e6%9e%81%e6%98%9f/)\n\n<p>极星Polestar HMI<\/p>\n\n\n\n<figure class=\"wp-block-video\"><video controls src=\"https://zhinengzuocang.cn/wp-content/uploads/2024/02/极星Polestar-HMI.mp4\"><\/video><\/figure>\n"</script>
+<script type="application/json" id="sourceEn">"> 原文发布于主站：[查看原文](https://zhinengzuocang.cn/2024/02/08/%e6%9e%81%e6%98%9f/)\n\n<p>极星Polestar HMI<\/p>\n\n\n\n<figure class=\"wp-block-video\"><video controls src=\"https://zhinengzuocang.cn/wp-content/uploads/2024/02/极星Polestar-HMI.mp4\"><\/video><\/figure>\n"</script>
+<script>window.setArticleLanguage=function(lang){var id=lang==="en"?"sourceEn":"sourceZh";document.getElementById("content").innerHTML=marked.parse(JSON.parse(document.getElementById(id).textContent));};</script>
+</article></main><footer data-zh="© snowCrane · GitHub Pages 静态镜像" data-en="© snowCrane · GitHub Pages mirror">© snowCrane · GitHub Pages 静态镜像</footer>
+<script>
+(function(){
+  function apply(lang){
+    document.documentElement.lang=lang==="en"?"en":"zh-CN";
+    document.querySelectorAll("[data-zh][data-en]").forEach(function(el){el.textContent=el.dataset[lang];});
+    document.title=document.body.dataset["title"+(lang==="en"?"En":"Zh")]+" · snowCrane";
+    document.getElementById("langToggle").textContent=lang==="en"?"中文":"EN";
+    if(window.setArticleLanguage) window.setArticleLanguage(lang);
+    localStorage.setItem("snowcrane-lang",lang);
+  }
+  document.getElementById("langToggle").onclick=function(){
+    apply(document.documentElement.lang==="en"?"zh":"en");
+  };
+  apply(localStorage.getItem("snowcrane-lang")==="en"?"en":"zh");
+})();
+</script>
+<script defer src="/js/snowcrane-features.js"></script>
+</body></html>

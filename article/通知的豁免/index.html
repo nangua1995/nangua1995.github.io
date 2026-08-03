@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>通知的豁免 · snowCrane</title>
+<link rel="stylesheet" href="/blog/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+<link rel="stylesheet" href="/css/snowcrane-features.css">
+</head><body data-title-zh="通知的豁免" data-title-en="通知的豁免">
+<header class="hero"><div class="hero-inner"><a class="brand" href="/">snowCrane</a>
+<nav><a href="/" data-zh="文章" data-en="Articles">文章</a>
+<a href="https://zhinengzuocang.cn/cockpit/" data-zh="招聘雷达" data-en="Talent Radar">招聘雷达</a>
+<a href="https://github.com/nangua1995">GitHub</a>
+<button type="button" id="langToggle">EN</button></nav></div></header>
+<main><article>
+<p class="back"><a href="/" data-zh="← 返回文章列表" data-en="← Back to articles">← 返回文章列表</a></p>
+<p class="meta">2024-03-27 · 1 min read</p>
+<h1 data-zh="通知的豁免" data-en="通知的豁免">通知的豁免</h1>
+<p class="summary" data-zh="参考android developer 链接： https://developer.android.googl […]" data-en="参考android developer 链接： https://developer.android.googl […]">参考android developer 链接： https://developer.android.googl […]</p>
+<p class="tags" data-zh="#android 通知" data-en="#android 通知">#android 通知</p>
+<div id="content" class="markdown"></div>
+<script type="application/json" id="sourceZh">"> 原文发布于主站：[查看原文](https://zhinengzuocang.cn/2024/03/27/%e9%80%9a%e7%9f%a5%e7%9a%84%e8%b1%81%e5%85%8d/)\n\n<p>参考android developer 链接：<\/p>\n\n\n\n<p><a href=\"https://developer.android.google.cn/develop/ui/views/notifications/notification-permission?authuser=0&amp;hl=zh-cn#exemptions\">https://developer.android.google.cn/develop/ui/views/notifications/notification-permission?authuser=0&amp;hl=zh-cn#exemptions<\/a><\/p>\n\n\n\n<p>此部分列出了一些不受通知权限行为变更影响的通知和应用。在 Android 13（API 级别 33）或更高版本中，如果用户拒绝授予通知权限，他们仍会在任务管理器中看到与前台服务相关的通知，但在抽屉式通知栏中看不到这些通知。<br>媒体会话<br>与媒体会话有关的通知不受此行为变更的影响。<br>配置为自行管理通话的应用<br>如果您将应用配置为自行管理通话，那么您无需 POST_NOTIFICATIONS 权限即可让应用发送使用 Notification.CallStyle 通知样式的通知。<br>如果您的应用执行以下每项操作，系统就会认为您的应用已将自己配置为自行管理通话：<br>1. 声明 MANAGE_OWN_CALLS 权限。<br>2. 实现 ConnectionService 接口。<br>3. 通过调用 registerPhoneAccount() 向设备的电信服务提供商注册。<\/p>\n"</script>
+<script type="application/json" id="sourceEn">"> 原文发布于主站：[查看原文](https://zhinengzuocang.cn/2024/03/27/%e9%80%9a%e7%9f%a5%e7%9a%84%e8%b1%81%e5%85%8d/)\n\n<p>参考android developer 链接：<\/p>\n\n\n\n<p><a href=\"https://developer.android.google.cn/develop/ui/views/notifications/notification-permission?authuser=0&amp;hl=zh-cn#exemptions\">https://developer.android.google.cn/develop/ui/views/notifications/notification-permission?authuser=0&amp;hl=zh-cn#exemptions<\/a><\/p>\n\n\n\n<p>此部分列出了一些不受通知权限行为变更影响的通知和应用。在 Android 13（API 级别 33）或更高版本中，如果用户拒绝授予通知权限，他们仍会在任务管理器中看到与前台服务相关的通知，但在抽屉式通知栏中看不到这些通知。<br>媒体会话<br>与媒体会话有关的通知不受此行为变更的影响。<br>配置为自行管理通话的应用<br>如果您将应用配置为自行管理通话，那么您无需 POST_NOTIFICATIONS 权限即可让应用发送使用 Notification.CallStyle 通知样式的通知。<br>如果您的应用执行以下每项操作，系统就会认为您的应用已将自己配置为自行管理通话：<br>1. 声明 MANAGE_OWN_CALLS 权限。<br>2. 实现 ConnectionService 接口。<br>3. 通过调用 registerPhoneAccount() 向设备的电信服务提供商注册。<\/p>\n"</script>
+<script>window.setArticleLanguage=function(lang){var id=lang==="en"?"sourceEn":"sourceZh";document.getElementById("content").innerHTML=marked.parse(JSON.parse(document.getElementById(id).textContent));};</script>
+</article></main><footer data-zh="© snowCrane · GitHub Pages 静态镜像" data-en="© snowCrane · GitHub Pages mirror">© snowCrane · GitHub Pages 静态镜像</footer>
+<script>
+(function(){
+  function apply(lang){
+    document.documentElement.lang=lang==="en"?"en":"zh-CN";
+    document.querySelectorAll("[data-zh][data-en]").forEach(function(el){el.textContent=el.dataset[lang];});
+    document.title=document.body.dataset["title"+(lang==="en"?"En":"Zh")]+" · snowCrane";
+    document.getElementById("langToggle").textContent=lang==="en"?"中文":"EN";
+    if(window.setArticleLanguage) window.setArticleLanguage(lang);
+    localStorage.setItem("snowcrane-lang",lang);
+  }
+  document.getElementById("langToggle").onclick=function(){
+    apply(document.documentElement.lang==="en"?"zh":"en");
+  };
+  apply(localStorage.getItem("snowcrane-lang")==="en"?"en":"zh");
+})();
+</script>
+<script defer src="/js/snowcrane-features.js"></script>
+</body></html>
