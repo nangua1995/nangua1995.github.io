@@ -8,7 +8,7 @@
 
 ## 一、结论先行
 
-**双弹窗与系统 PackageInstaller 无关，根因在应用自身的 Dialog 管理。**
+**根因在应用自身的 Dialog 管理。**
 
 - 弹窗由一个预装应用自身创建；包名、路径、进程号和内部实现标识均已脱敏。
 - 根因：Android `ViewGroup.splitMotionEvents=true` 默认开启，导致两指落在两行不同的「卸载」按钮时，两个 itemView 各触发一次 `OnClickListener.onClick`，各自 `DialogFragment.show(fm, "UninstallDialog")`，而应用的 Dialog 管理器未按 tag 去重。
@@ -32,23 +32,6 @@
 ```
 
 两个 `UninstallDialog` 同处 `RESUMED` 状态，且都在同一个主线程、同一个 `FragmentManager`、同一个 tag。应用的 Dialog 管理器只按应用维度注册，不做 tag 级互斥。
-
-### 2.2 系统 PackageInstaller 完全没被调用
-
-整份 log grep 以下关键字，全部无命中：
-
-- `UninstallerActivity`
-- `UninstallLaunch`
-- `ACTION_UNINSTALL_PACKAGE`
-- `Replacing existing uninstall dialog`（老路径的 `sCurrentInstance` 去重日志）
-
-说明应用商店的卸载 UX 是两段式：先弹自己的确认框，用户点「确定」后才会调系统卸载。这次问题**卡在第一段就复制**，根本没走到系统那一步。
-
-### 2.3 归属判断
-
-进程启动和应用加载记录表明，两次弹窗均由目标应用自身创建，而非系统卸载组件创建。
-
----
 
 ## 三、核心机制：`splitMotionEvents`（重点）
 
@@ -118,7 +101,7 @@ finger2 抬起 → ACTION_UP           (pointerId=1)
 
 ## 五、修复方向
 
-改动必须落在 **目标应用自身**。系统 PackageInstaller 本次没参与，修改它无效。
+改动必须落在 **目标应用自身**。
 
 按有效性和成本排序：
 
@@ -183,29 +166,7 @@ uninstallButton.setOnClickListener(v -> {
 
 ---
 
-## 六、系统 PackageInstaller 侧的旁证（不构成 fix，仅备查）
-
-老路径 `frameworks/base/packages/PackageInstaller/src/com/android/packageinstaller/UninstallerActivity.java:229`：
-
-```java
-if (sCurrentInstance != null) {
-    Log.w(TAG, "Replacing existing uninstall dialog with request for " + mPackageName);
-    sCurrentInstance.dispatchAborted();
-    sCurrentInstance.setResult(RESULT_CANCELED);
-    sCurrentInstance.finish();
-}
-sCurrentInstance = this;
-```
-
-- 当前系统配置走老路径，因此仍有 `sCurrentInstance` 静态互斥。
-- 即使商店真的连发两次 `Intent.ACTION_UNINSTALL_PACKAGE`，系统侧也会去重成一个。
-- **本次 log 没触发这条日志**，说明商店根本没走到系统卸载步骤——纯商店内部弹窗复制。
-
-顺带注意：如果哪天启用 `use_pia_v2`，`v2/ui/UninstallLaunch.kt` **没有类似 sCurrentInstance 的守护**，需要补一份，否则老路径的兜底能力会退化。这是另一个议题，与本 bug 无关。
-
----
-
-## 七、附：验证要点
+## 六、附：验证要点
 
 改动后回归时至少验证：
 
