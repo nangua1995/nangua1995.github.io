@@ -28,6 +28,17 @@
       "reading_time": "14"
     },
     {
+      "slug": "input-multitouch-dialog-dedup",
+      "title": "双指同时点击为何会弹出两个确认框：Input 多指分派与 Dialog 去重",
+      "date": "2026-08-03",
+      "summary": "从 ViewGroup 的 splitMotionEvents 机制出发，分析列表中多指同时点击如何触发两次独立 onClick，以及如何通过 Dialog tag 去重建立兜底。",
+      "tags": [
+        "input",
+        "座舱技术踩坑"
+      ],
+      "reading_time": "10"
+    },
+    {
       "slug": "cockpit-industry-cases-and-reports",
       "title": "智能座舱行业案例与报告汇总",
       "date": "2026-08-03",
